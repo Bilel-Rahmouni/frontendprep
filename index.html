@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="frontendprep — 1,200 timed quiz questions covering HTML, CSS, React, and general frontend development. Practice quizzes, mock exams, and study tips."
+    />
+    <meta name="author" content="mint." />
+    <meta name="theme-color" content="#f4f1eb" />
+    <link rel="canonical" href="https://frontendprep.app/quiz" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="frontendprep — HTML, CSS, React & Frontend Quizzes" />
+    <meta
+      property="og:description"
+      content="1,200 timed questions across 4 tracks. Practice mode, mock exams, weak-area analysis, and 72 prep tips."
+    />
+    <meta property="og:site_name" content="frontendprep" />
+    <meta property="og:url" content="https://frontendprep.app/quiz" />
+    <meta property="og:image" content="https://frontendprep.app/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="frontendprep — 1,200 timed frontend quiz questions" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="frontendprep — Frontend Exam Simulator" />
+    <meta
+      name="twitter:description"
+      content="Master the frontend test with 1,200 timed quiz questions."
+    />
+    <meta name="twitter:image" content="https://frontendprep.app/og-image.png" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1493161259058671"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      />
+    </noscript>
+    <title>frontendprep — HTML, CSS, React & Frontend Quizzes</title>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "frontendprep",
+        "description": "1,200 timed frontend quiz questions across HTML, CSS, React, and general frontend development.",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Any",
+        "url": "https://frontendprep.app/quiz",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+      }
+    </script>
+    <script>
+      (function () {
+        try {
+          var theme = localStorage.getItem('frontend-prep-theme')
+          if (theme === 'dark' || theme === 'light') {
+            document.documentElement.dataset.theme = theme
+            var meta = document.querySelector('meta[name="theme-color"]')
+            if (meta) meta.setAttribute('content', theme === 'dark' ? '#08080c' : '#f4f1eb')
+          }
+        } catch (e) {}
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
