@@ -144,12 +144,12 @@ export default function QuizHub() {
       return `Practice ${part.label} ${level.label.toLowerCase()} quiz ${quizIndex + 1} with 20 timed frontend questions.`
     }
     if (part && level) {
-      return `Choose a ${part.label} ${level.label.toLowerCase()} quiz or start a mock exam.`
+      return `${part.label} ${level.label.toLowerCase()} practice: five timed quizzes, a mock exam, and study guidance for frontend interview prep.`
     }
     if (part) {
-      return `Practice ${part.label} questions by beginner, intermediate, or advanced difficulty.`
+      return `${part.label} quiz track with beginner, intermediate, and advanced levels — timed practice, mock exams, and topic coverage.`
     }
-    return 'Choose HTML, CSS, React, or general frontend quizzes with timed practice and mock exams.'
+    return 'Choose HTML, CSS, React, or general frontend quizzes with timed practice, mock exams, and study guidance.'
   }, [isExam, part, level, quiz, quizIndex])
 
   const prerenderReady = useMemo(() => {
@@ -160,12 +160,16 @@ export default function QuizHub() {
     return true
   }, [loadError, bankKey, loading, quiz, quizQuestions.length])
 
+  // Interactive quiz/exam shells are thin for crawlers — keep them usable but noindex.
+  const noindex = Boolean(quizIndexParam)
+
   const meta = (
     <PageMeta
       title={pageTitle}
       description={pageDescription}
       path={pagePath}
       ready={prerenderReady}
+      noindex={noindex}
     />
   )
 

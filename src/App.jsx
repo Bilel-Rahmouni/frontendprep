@@ -5,9 +5,16 @@ import Header from '../components/Header'
 import SiteFooter from '../components/SiteFooter'
 import { ThemeProvider } from '../context/ThemeProvider'
 
+const HomePage = lazy(() => import('./HomePage'))
 const QuizHub = lazy(() => import('./QuizHub'))
 const PreparationHub = lazy(() => import('./PreparationHub'))
 const SavedQuestionsHub = lazy(() => import('./SavedQuestionsHub'))
+const GuidesHub = lazy(() => import('./GuidesHub'))
+const GuidePage = lazy(() => import('./GuidePage'))
+const FaqPage = lazy(() => import('./FaqPage'))
+const AboutPage = lazy(() => import('./AboutPage'))
+const PrivacyPage = lazy(() => import('./PrivacyPage'))
+const TermsPage = lazy(() => import('./TermsPage'))
 
 function RouteFallback() {
   return (
@@ -27,14 +34,20 @@ function Layout() {
       <main id="main-content" className="app-main">
         <Suspense fallback={<RouteFallback />}>
           <Routes>
-            <Route index element={<Navigate to="/quiz" replace />} />
+            <Route index element={<HomePage />} />
             <Route path="quiz" element={<QuizHub />} />
             <Route path="quiz/:partId" element={<QuizHub />} />
             <Route path="quiz/:partId/:levelId" element={<QuizHub />} />
             <Route path="quiz/:partId/:levelId/:quizIndex" element={<QuizHub />} />
             <Route path="prep" element={<PreparationHub />} />
+            <Route path="guides" element={<GuidesHub />} />
+            <Route path="guides/:slug" element={<GuidePage />} />
+            <Route path="faq" element={<FaqPage />} />
+            <Route path="about" element={<AboutPage />} />
+            <Route path="privacy" element={<PrivacyPage />} />
+            <Route path="terms" element={<TermsPage />} />
             <Route path="saved" element={<SavedQuestionsHub />} />
-            <Route path="*" element={<Navigate to="/quiz" replace />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
       </main>

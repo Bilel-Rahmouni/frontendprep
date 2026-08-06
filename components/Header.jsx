@@ -10,7 +10,7 @@ export default function Header() {
         <button
           type="button"
           className="site-header__brand"
-          onClick={() => navigate('/quiz')}
+          onClick={() => navigate('/')}
           aria-label="frontendprep home"
         >
           <span className="site-header__mark">
@@ -25,13 +25,21 @@ export default function Header() {
         <nav className="site-nav" aria-label="Main">
           <NavLink
             to="/quiz"
-            end
             className={({ isActive }) =>
               `site-nav__link ${isActive ? 'site-nav__link--active' : ''}`
             }
           >
             <span className="site-nav__icon" aria-hidden>◆</span>
             Tests
+          </NavLink>
+          <NavLink
+            to="/guides"
+            className={({ isActive }) =>
+              `site-nav__link ${isActive ? 'site-nav__link--active' : ''}`
+            }
+          >
+            <span className="site-nav__icon" aria-hidden>○</span>
+            Guides
           </NavLink>
           <NavLink
             to="/prep"

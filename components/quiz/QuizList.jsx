@@ -1,5 +1,7 @@
 import { getQuizzesForLevel, getPart, getLevel } from '../../data/catalog'
 import { getQuizTimeLabel, QUESTIONS_PER_QUIZ } from '../../data/quizConfig'
+import { getLevelOverview, getTrackOverview } from '../../data/trackOverviews'
+import HubOverview from './HubOverview'
 
 function ProgressBadge({ passed, total }) {
   if (total === 0) return null
@@ -26,6 +28,8 @@ export default function QuizList({
   const quizzes = getQuizzesForLevel(partId, levelId)
   const part = getPart(partId)
   const level = getLevel(levelId)
+  const trackOverview = getTrackOverview(partId)
+  const levelOverview = getLevelOverview(levelId)
 
   return (
     <section className="hub-page">
@@ -34,15 +38,29 @@ export default function QuizList({
       </button>
 
       <div className="hub-page__hero hub-page__hero--compact">
-        <div className="pill-row">
-          <span className="pill" style={{ '--pill-color': part?.color }}>{partLabel}</span>
-          <span className="pill pill--soft" style={{ '--pill-color': level?.tone }}>{levelLabel}</span>
-          {levelProgress && (
-            <ProgressBadge passed={levelProgress.passed} total={levelProgress.total} />
+        <div className="hub-page__hero-copy">
+          <div className="pill-row">
+            <span className="pill" style={{ '--pill-color': part?.color }}>{partLabel}</span>
+            <span className="pill pill--soft" style={{ '--pill-color': level?.tone }}>{levelLabel}</span>
+            {levelProgress && (
+              <ProgressBadge passed={levelProgress.passed} total={levelProgress.total} />
+            )}
+          </div>
+          <h1 className="display-title display-title--sm">
+            {partLabel} · {levelLabel}
+          </h1>
+          {levelOverview && (
+            <p className="hub-page__lead hub-page__lead--inline">{levelOverview.focus}</p>
           )}
         </div>
-        <h1 className="display-title display-title--sm">Select quiz</h1>
       </div>
+
+      {(trackOverview || levelOverview) && (
+        <HubOverview
+          summary={levelOverview ? `${levelOverview.goal} ${trackOverview?.summary ?? ''}`.trim() : trackOverview?.summary}
+          levelTips={levelOverview?.tips}
+        />
+      )}
 
       <button
         type="button"

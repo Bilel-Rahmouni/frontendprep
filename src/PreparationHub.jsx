@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { getCategoryLabel, getTipsByCategory, PREP_CATEGORIES, PREP_TIPS } from '../data/preparationTips'
 import PageMeta from '../components/PageMeta'
 
@@ -12,13 +13,17 @@ export default function PreparationHub() {
       <PageMeta
         title="Preparation"
         path="/prep"
-        description="72 curated study tips for HTML, CSS, JavaScript, React, and test day."
+        description={`${PREP_TIPS.length} curated study tips for HTML, CSS, JavaScript, React, study plans, mindset, and test day.`}
       />
       <section className="prep-page">
       <div className="prep-page__hero">
         <p className="eyebrow">Study guide</p>
         <h1 className="display-title display-title--sm">Preparation</h1>
         <p className="prep-page__stat">{PREP_TIPS.length} curated tips</p>
+        <p className="prep-page__intro">
+          Short, actionable reminders to use between timed quizzes. For longer study plans and topic
+          overviews, see the <Link to="/guides">guides</Link>.
+        </p>
       </div>
 
       <div className="prep-layout">

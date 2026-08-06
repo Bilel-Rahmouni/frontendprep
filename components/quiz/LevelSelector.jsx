@@ -1,6 +1,19 @@
+import { Link } from 'react-router-dom'
 import { LEVELS } from '../../data/catalog'
+import { getTrackOverview } from '../../data/trackOverviews'
+import HubOverview from './HubOverview'
+
+const GUIDE_BY_PART = {
+  html: '/guides/html-interview-guide',
+  css: '/guides/css-interview-guide',
+  react: '/guides/react-interview-guide',
+  frontend: '/guides/javascript-frontend-basics',
+}
 
 export default function LevelSelector({ partLabel, partColor, partId, getLevelProgress, onSelect, onBack }) {
+  const overview = getTrackOverview(partId)
+  const guidePath = GUIDE_BY_PART[partId]
+
   return (
     <section className="hub-page">
       <button type="button" className="back-link" onClick={onBack}>
@@ -8,9 +21,28 @@ export default function LevelSelector({ partLabel, partColor, partId, getLevelPr
       </button>
 
       <div className="hub-page__hero hub-page__hero--compact">
-        <span className="pill" style={{ '--pill-color': partColor }}>{partLabel}</span>
-        <h1 className="display-title display-title--sm">Choose difficulty</h1>
+        <div className="hub-page__hero-copy">
+          <span className="pill" style={{ '--pill-color': partColor }}>{partLabel}</span>
+          <h1 className="display-title display-title--sm">{partLabel} practice</h1>
+          <p className="hub-page__lead hub-page__lead--inline">
+            Choose a difficulty. Each level has five timed quizzes and a mock exam.
+            {guidePath && (
+              <>
+                {' '}
+                Read the <Link to={guidePath}>{partLabel} guide</Link> for topic context.
+              </>
+            )}
+          </p>
+        </div>
       </div>
+
+      {overview && (
+        <HubOverview
+          summary={overview.summary}
+          covers={overview.covers}
+          howToStudy={overview.howToStudy}
+        />
+      )}
 
       <div className="level-stack">
         {LEVELS.map((level, i) => {

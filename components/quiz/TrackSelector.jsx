@@ -1,4 +1,5 @@
-import { PARTS, LEVELS, QUIZZES_PER_LEVEL } from '../../data/catalog'
+import { Link } from 'react-router-dom'
+import { PARTS, LEVELS, QUIZZES_PER_LEVEL, QUESTIONS_PER_LEVEL } from '../../data/catalog'
 import TrackIcon from '../icons/TrackIcon'
 import { useProgress } from '../../hooks/useProgress'
 
@@ -70,13 +71,30 @@ export default function TrackSelector({ getTrackProgress, onSelect }) {
                 <TrackIcon trackId={part.id} />
               </span>
               <span className="track-tile__label">{part.label}</span>
-              <span className="track-tile__meta">100 questions · 5 quizzes</span>
+              <span className="track-tile__meta">
+                {QUESTIONS_PER_LEVEL * LEVELS.length} questions · {LEVELS.length} levels
+              </span>
               <span className="track-tile__cta" aria-hidden>
                 Start →
               </span>
             </button>
           )
         })}
+      </div>
+
+      <div className="hub-overview hub-overview--tracks">
+        <h2 className="hub-overview__heading">How the quiz hub works</h2>
+        <p className="hub-overview__text">
+          Choose a track, then a difficulty. Each level has five 20-question practice quizzes (about 4 minutes
+          each) and a mock exam that randomizes questions from that level. Scores and bookmarks stay in your
+          browser. For study plans and topic depth, see the{' '}
+          <Link to="/guides">guides</Link> and <Link to="/prep">preparation tips</Link>.
+        </p>
+        <p className="hub-overview__text">
+          New to timed frontend tests? Start with the{' '}
+          <Link to="/guides/frontend-interview-prep">frontend interview prep guide</Link>, then warm up on
+          Beginner HTML or CSS before mixing in React and the general Frontend track.
+        </p>
       </div>
     </section>
   )
