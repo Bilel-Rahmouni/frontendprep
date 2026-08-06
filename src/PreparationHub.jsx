@@ -68,7 +68,6 @@ export default function PreparationHub() {
                     '--i': i % 10,
                   }}
                 >
-                  <span className="tip-card__rail" aria-hidden />
                   <div className="tip-card__inner">
                     <span className="tip-card__cat">{getCategoryLabel(tip.category)}</span>
                     <h3 className="tip-card__title">{tip.title}</h3>

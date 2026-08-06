@@ -1,22 +1,6 @@
 import { Link } from 'react-router-dom'
 import { PARTS, LEVELS, QUIZZES_PER_LEVEL, QUESTIONS_PER_LEVEL } from '../../data/catalog'
-import TrackIcon from '../icons/TrackIcon'
 import { useProgress } from '../../hooks/useProgress'
-
-const STATS = [
-  { value: '1.2k', label: 'Questions' },
-  { value: '4', label: 'Tracks' },
-  { value: '4 min', label: 'Per quiz' },
-]
-
-function TrackProgressRing({ passed, total }) {
-  const pct = total > 0 ? Math.round((passed / total) * 100) : 0
-  return (
-    <span className="track-progress" style={{ '--pct': pct }} aria-label={`${passed} of ${total} quizzes passed`}>
-      <span className="track-progress__label">{passed}/{total}</span>
-    </span>
-  )
-}
 
 export default function TrackSelector({ getTrackProgress, onSelect }) {
   const { getGlobalProgress } = useProgress()
@@ -26,26 +10,17 @@ export default function TrackSelector({ getTrackProgress, onSelect }) {
     <section className="hub-page" aria-labelledby="tracks-heading">
       <div className="hub-page__hero">
         <div className="hub-page__hero-copy">
-          <p className="eyebrow">Exam simulator</p>
-          <h1 id="tracks-heading" className="display-title">
-            Master the
-            <span className="display-title__accent"> frontend test</span>
+          <p className="eyebrow">Practice</p>
+          <h1 id="tracks-heading" className="display-title display-title--sm">
+            Quiz tracks
           </h1>
           <p className="hub-page__lead">
-            1,200 timed questions across HTML, CSS, React &amp; frontend — practice quizzes or mock exams.
+            1,200 timed questions across HTML, CSS, React, and frontend.
             {global.passed > 0 && (
               <span className="hub-page__lead-stat"> · {global.passed}/{global.total} passed</span>
             )}
           </p>
         </div>
-        <ul className="stat-strip">
-          {STATS.map((s) => (
-            <li key={s.label} className="stat-strip__item">
-              <span className="stat-strip__value">{s.value}</span>
-              <span className="stat-strip__label">{s.label}</span>
-            </li>
-          ))}
-        </ul>
       </div>
 
       <div className="tracks-bento">
@@ -60,22 +35,23 @@ export default function TrackSelector({ getTrackProgress, onSelect }) {
               className={`track-tile track-tile--${part.id}`}
               style={{
                 '--track-color': part.color,
-                '--track-gradient': part.gradient,
                 '--i': i,
               }}
               onClick={() => onSelect(part.id)}
             >
-              <span className="track-tile__bg" aria-hidden />
-              {prog && <TrackProgressRing passed={prog.passed} total={total} />}
-              <span className="track-tile__symbol">
-                <TrackIcon trackId={part.id} />
+              <span className="track-tile__top">
+                <span className="track-tile__label">{part.label}</span>
+                {prog && (
+                  <span className="track-progress" aria-label={`${prog.passed} of ${total} quizzes passed`}>
+                    {prog.passed}/{total}
+                  </span>
+                )}
               </span>
-              <span className="track-tile__label">{part.label}</span>
               <span className="track-tile__meta">
                 {QUESTIONS_PER_LEVEL * LEVELS.length} questions · {LEVELS.length} levels
               </span>
               <span className="track-tile__cta" aria-hidden>
-                Start →
+                Open →
               </span>
             </button>
           )
@@ -83,17 +59,11 @@ export default function TrackSelector({ getTrackProgress, onSelect }) {
       </div>
 
       <div className="hub-overview hub-overview--tracks">
-        <h2 className="hub-overview__heading">How the quiz hub works</h2>
+        <h2 className="hub-overview__heading">How it works</h2>
         <p className="hub-overview__text">
-          Choose a track, then a difficulty. Each level has five 20-question practice quizzes (about 4 minutes
-          each) and a mock exam that randomizes questions from that level. Scores and bookmarks stay in your
-          browser. For study plans and topic depth, see the{' '}
-          <Link to="/guides">guides</Link> and <Link to="/prep">preparation tips</Link>.
-        </p>
-        <p className="hub-overview__text">
-          New to timed frontend tests? Start with the{' '}
-          <Link to="/guides/frontend-interview-prep">frontend interview prep guide</Link>, then warm up on
-          Beginner HTML or CSS before mixing in React and the general Frontend track.
+          Pick a track, then a difficulty. Each level has five 20-question quizzes (~4 min) and a mock exam.
+          Progress stays in your browser. See the <Link to="/guides">guides</Link> and{' '}
+          <Link to="/prep">preparation tips</Link> for study plans.
         </p>
       </div>
     </section>

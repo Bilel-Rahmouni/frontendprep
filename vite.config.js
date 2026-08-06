@@ -29,10 +29,10 @@ export default defineConfig({
         name: 'frontendprep',
         short_name: 'frontendprep',
         description: '1,200 timed frontend quiz questions — HTML, CSS, React & more.',
-        theme_color: '#f4f1eb',
-        background_color: '#f4f1eb',
+        theme_color: '#f6f6f4',
+        background_color: '#f6f6f4',
         display: 'standalone',
-        start_url: '/quiz',
+        start_url: '/',
         icons: [
           {
             src: '/pwa-192.png',

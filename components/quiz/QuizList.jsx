@@ -69,7 +69,6 @@ export default function QuizList({
         disabled={loading}
         onClick={onStartExam}
       >
-        <span className="exam-row__icon" aria-hidden>⚡</span>
         <span className="exam-row__body">
           <span className="exam-row__title">Mock exam</span>
           <span className="exam-row__meta">Random {QUESTIONS_PER_QUIZ} Q · {getQuizTimeLabel()} · strict</span>

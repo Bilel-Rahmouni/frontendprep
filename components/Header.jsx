@@ -1,6 +1,13 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import ThemeToggle from './ThemeToggle'
 
+const NAV = [
+  { to: '/quiz', label: 'Tests' },
+  { to: '/guides', label: 'Guides' },
+  { to: '/prep', label: 'Prep' },
+  { to: '/saved', label: 'Saved' },
+]
+
 export default function Header() {
   const navigate = useNavigate()
 
@@ -13,52 +20,24 @@ export default function Header() {
           onClick={() => navigate('/')}
           aria-label="frontendprep home"
         >
-          <span className="site-header__mark">
-            <span className="site-header__mark-core">FP</span>
+          <span className="site-header__mark" aria-hidden>
+            FP
           </span>
-          <div className="site-header__text">
-            <span className="site-header__title">frontendprep</span>
-            <span className="site-header__subtitle">Exam simulator</span>
-          </div>
+          <span className="site-header__title">frontendprep</span>
         </button>
 
         <nav className="site-nav" aria-label="Main">
-          <NavLink
-            to="/quiz"
-            className={({ isActive }) =>
-              `site-nav__link ${isActive ? 'site-nav__link--active' : ''}`
-            }
-          >
-            <span className="site-nav__icon" aria-hidden>◆</span>
-            Tests
-          </NavLink>
-          <NavLink
-            to="/guides"
-            className={({ isActive }) =>
-              `site-nav__link ${isActive ? 'site-nav__link--active' : ''}`
-            }
-          >
-            <span className="site-nav__icon" aria-hidden>○</span>
-            Guides
-          </NavLink>
-          <NavLink
-            to="/prep"
-            className={({ isActive }) =>
-              `site-nav__link ${isActive ? 'site-nav__link--active' : ''}`
-            }
-          >
-            <span className="site-nav__icon" aria-hidden>◇</span>
-            Preparation
-          </NavLink>
-          <NavLink
-            to="/saved"
-            className={({ isActive }) =>
-              `site-nav__link ${isActive ? 'site-nav__link--active' : ''}`
-            }
-          >
-            <span className="site-nav__icon" aria-hidden>☆</span>
-            Saved
-          </NavLink>
+          {NAV.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                `site-nav__link ${isActive ? 'site-nav__link--active' : ''}`
+              }
+            >
+              {item.label}
+            </NavLink>
+          ))}
         </nav>
 
         <ThemeToggle />
