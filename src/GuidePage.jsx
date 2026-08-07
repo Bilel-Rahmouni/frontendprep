@@ -1,4 +1,5 @@
 import { Link, Navigate, useParams } from 'react-router-dom'
+import AdSlot from '../components/AdSlot'
 import PageMeta from '../components/PageMeta'
 import { ContentCta } from '../components/ContentPage'
 import { getGuide } from '../data/guides'
@@ -42,6 +43,7 @@ export default function GuidePage() {
             </section>
           ))}
 
+          <AdSlot slot="guide" />
           <ContentCta to="/quiz" label="Practice with quizzes" />
         </div>
       </article>

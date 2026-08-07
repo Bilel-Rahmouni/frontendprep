@@ -232,6 +232,97 @@ export const GUIDES = [
       },
     ],
   },
+  {
+    slug: 'accessibility-frontend-exams',
+    title: 'Accessibility for frontend exams and interviews',
+    description:
+      'What timed frontend tests ask about a11y: semantics, labels, alt text, focus, keyboard access, and common traps.',
+    category: 'Accessibility',
+    readMinutes: 8,
+    sections: [
+      {
+        heading: 'Why accessibility shows up in MCQs',
+        paragraphs: [
+          'Accessibility questions check whether you build interfaces that work for assistive technology and keyboard users — not only visual polish. Exams reward precise vocabulary: landmark roles, label association, and the difference between decorative and informative images.',
+          'Treat a11y like HTML semantics: the “correct” answer is usually the one that communicates meaning to the browser and AT, even if a div-with-styles hack looks the same on screen.',
+        ],
+      },
+      {
+        heading: 'High-yield topics',
+        paragraphs: [
+          'Semantic structure: one clear page landmark set (main, nav, header, footer), heading order without random skips, and buttons for actions vs links for navigation. Forms: every input needs a label (wrap or for/id); required and type attributes help native validation.',
+          'Images: informative images need descriptive alt; decorative images use empty alt. Focus: never remove outlines without an equivalent :focus-visible style. Keyboard users must reach controls and see where they are.',
+          'ARIA is a last resort when native HTML cannot express the pattern. Prefer a real button over role="button" on a div. Know aria-label vs visible text, and that ARIA does not fix broken markup by itself.',
+        ],
+      },
+      {
+        heading: 'How to practice',
+        paragraphs: [
+          'On frontendprep, watch for HTML and Frontend questions about labels, alt, landmarks, and focus. After misses, write one rule in your own words. Pair quizzes with the HTML tips on the Preparation page, then verify edge cases on MDN when standards change.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'performance-basics-frontend',
+    title: 'Frontend performance basics for interviews',
+    description:
+      'Loading, rendering, assets, and measurement vocabulary that shows up in frontend exams and screens.',
+    category: 'Performance',
+    readMinutes: 8,
+    sections: [
+      {
+        heading: 'Think in costs users feel',
+        paragraphs: [
+          'Performance interview questions usually map to load time, interactivity, and visual stability. You do not need to memorize every metric acronym, but you should know what slows a page: large JS bundles, render-blocking CSS, unoptimized images, and main-thread work.',
+          'Separate network cost (bytes and round trips) from runtime cost (parsing JS, layout, paint). Fixes differ: compress and lazy-load assets for the first; reduce work and avoid layout thrash for the second.',
+        ],
+      },
+      {
+        heading: 'Concepts exams expect',
+        paragraphs: [
+          'Critical rendering path: HTML → DOM, CSS → CSSOM, combine into render tree, layout, paint. Defer non-critical scripts; prefer async/defer correctly. Images: modern formats, dimensions to reduce layout shift, lazy loading below the fold.',
+          'Caching and CDN basics matter for “how would you ship faster globally?” questions. Code splitting and tree-shaking reduce unused JS. Measure with Lighthouse or DevTools Performance — interviews often ask what you would look at first.',
+        ],
+      },
+      {
+        heading: 'Practice path',
+        paragraphs: [
+          'Use the Frontend track for browser and asset questions, and the timed-MCQ strategy guide for pacing when stems include long code. Performance answers should be specific: name the bottleneck class, then the fix.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'dom-events-interview',
+    title: 'DOM and events interview guide',
+    description:
+      'DOM traversal, event bubbling vs capturing, delegation, and default actions — frequent traps in frontend quizzes.',
+    category: 'JavaScript',
+    readMinutes: 8,
+    sections: [
+      {
+        heading: 'DOM mental model',
+        paragraphs: [
+          'The DOM is a tree of nodes the browser builds from HTML. Interview questions ask how you select nodes, walk parents/children, and update content without wrecking performance. Prefer querySelector / getElementById over brittle chains when the exam allows modern APIs.',
+          'Know textContent vs innerHTML (and why injecting untrusted HTML is dangerous). Distinguish element nodes from text nodes when questions talk about childNodes vs children.',
+        ],
+      },
+      {
+        heading: 'Events that trip people up',
+        paragraphs: [
+          'Bubbling goes target → ancestors; capturing is the reverse. addEventListener’s third argument (or options.capture) enables capture. stopPropagation stops further travel; preventDefault cancels the browser’s default action (form submit, link navigation).',
+          'Event delegation attaches one listener to a parent and reads event.target — efficient for lists. Remember that some events do not bubble the way beginners expect; when unsure, eliminate options that confuse bubbling with capturing.',
+        ],
+      },
+      {
+        heading: 'Drill it under a timer',
+        paragraphs: [
+          'frontendprep Frontend and JavaScript-flavored tips cover fetch, storage, and events. After a miss, redraw the bubble path once on paper. Timed practice forces you to recall phase and default-action vocabulary without looking them up.',
+        ],
+      },
+    ],
+  },
 ]
 
 export function getGuide(slug) {

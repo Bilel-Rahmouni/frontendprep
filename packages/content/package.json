@@ -1,0 +1,17 @@
+{
+  "name": "@frontendprep/content",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./catalog": "./src/catalog.js",
+    "./quizConfig": "./src/quizConfig.js",
+    "./questions": "./src/questions.js",
+    "./preparationTips": "./src/preparationTips.js",
+    "./guides": "./src/guides.js",
+    "./faq": "./src/faq.js",
+    "./trackOverviews": "./src/trackOverviews.js"
+  }
+}

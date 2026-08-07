@@ -69,7 +69,7 @@ export default function QuizRunner({ quiz, questions, examMode = false, onFinish
     <div className="quiz-stage">
       {examMode && (
         <div className="exam-banner" role="status">
-          Mock exam — no exit until finished
+          Mock exam — stay until you finish or time runs out
         </div>
       )}
 

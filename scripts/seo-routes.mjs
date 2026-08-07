@@ -7,6 +7,9 @@ export const GUIDE_SLUGS = [
   'react-interview-guide',
   'javascript-frontend-basics',
   'timed-mcq-strategy',
+  'accessibility-frontend-exams',
+  'performance-basics-frontend',
+  'dom-events-interview',
 ]
 
 export function getSiteUrl(env = process.env) {
@@ -27,6 +30,7 @@ export function getSeoRoutes() {
     '/faq',
     '/about',
     '/privacy',
+    '/delete-data',
     '/terms',
   ]
 
@@ -66,7 +70,7 @@ export function routePriority(route) {
   if (route === '/guides' || route === '/prep') return '0.9'
   if (route.startsWith('/guides/')) return '0.85'
   if (route === '/faq' || route === '/about') return '0.8'
-  if (route === '/privacy' || route === '/terms') return '0.5'
+  if (route === '/privacy' || route === '/delete-data' || route === '/terms') return '0.5'
   if (route === '/saved') return '0.3'
   const parts = route.split('/').filter(Boolean)
   if (parts[0] === 'quiz' && parts.length === 2) return '0.85'
@@ -76,7 +80,7 @@ export function routePriority(route) {
 
 export function routeChangefreq(route) {
   if (route === '/saved') return 'weekly'
-  if (route === '/privacy' || route === '/terms') return 'yearly'
+  if (route === '/privacy' || route === '/delete-data' || route === '/terms') return 'yearly'
   if (route.startsWith('/guides')) return 'monthly'
   return 'weekly'
 }

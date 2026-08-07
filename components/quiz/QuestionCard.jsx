@@ -18,7 +18,7 @@ export default function QuestionCard({
   const skipped = !reviewOnly && selectedIndex === undefined
   const groupName = `question-${question.id}`
   const focusIndex = effectiveSelectedIndex ?? 0
-  const verdict = reviewOnly ? 'Correct answer' : isCorrect ? 'Correct' : skipped ? 'Time ran out' : 'Incorrect'
+  const verdict = reviewOnly ? 'Correct answer' : isCorrect ? 'Correct' : skipped ? 'Skipped' : 'Incorrect'
 
   function handleOptionKeyDown(event, index) {
     if (disabled) return

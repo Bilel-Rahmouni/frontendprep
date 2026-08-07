@@ -39,7 +39,7 @@ export const FAQ_ITEMS = [
     id: 'offline',
     question: 'Can I practice offline?',
     answer:
-      'frontendprep is a progressive web app. After you load it once with a network connection, many assets may be available offline depending on your browser and cache state. Fresh deploys still need a connection to update.',
+      'frontendprep works best online. Some assets may stay cached in your browser after the first visit, but question banks and updates still need a network connection.',
   },
   {
     id: 'study-plan',
@@ -57,7 +57,7 @@ export const FAQ_ITEMS = [
     id: 'data',
     question: 'Do you collect my quiz answers?',
     answer:
-      'Quiz answers, bookmarks, and progress stay in your browser’s local storage by default. We do not require login. Advertising and analytics partners may collect standard technical data as described in the Privacy Policy.',
+      'Quiz answers, bookmarks, and progress stay in your browser’s local storage by default. We do not require login. Advertising partners (such as Google AdSense) and hosting may process standard technical data as described in the Privacy Policy.',
   },
   {
     id: 'mobile',

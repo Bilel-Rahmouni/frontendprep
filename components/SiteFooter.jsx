@@ -13,9 +13,8 @@ export default function SiteFooter() {
         <Link to="/terms">Terms</Link>
       </nav>
       <p className="app-bar__credit">
-        site by{' '}
         <a href={BRAND_URL} target="_blank" rel="noopener noreferrer">
-          mint<span style={{ color: 'var(--mint)' }}>.</span>
+          mintstudio<span style={{ color: 'var(--mint)' }}>.</span>io
         </a>
       </p>
     </div>

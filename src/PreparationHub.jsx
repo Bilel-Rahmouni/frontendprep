@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import AdSlot from '../components/AdSlot'
 import { getCategoryLabel, getTipsByCategory, PREP_CATEGORIES, PREP_TIPS } from '../data/preparationTips'
 import PageMeta from '../components/PageMeta'
 
@@ -55,6 +56,8 @@ export default function PreparationHub() {
             <h2 className="prep-feed__title">{activeCat?.label ?? 'All'}</h2>
             <span className="prep-feed__count">{tips.length}</span>
           </header>
+
+          <AdSlot slot="prep" />
 
           <ul className="prep-feed__list">
             {tips.map((tip, i) => {

@@ -35,11 +35,16 @@ export default function PrivacyPage() {
         </p>
       </ContentSection>
 
-      <ContentSection title="Advertising">
+      <ContentSection title="Advertising and consent">
         <p>
-          We use Google AdSense to display advertisements. Google and its partners may use cookies or
-          similar technologies to serve ads based on your prior visits to this site or other sites. You
-          can learn how Google uses data at{' '}
+          We may show Google AdSense advertisements to help keep frontendprep free. Ads load only after
+          you Accept in our cookie consent banner. If you choose Reject ads, we do not load the AdSense
+          script. Your choice is stored in localStorage as <code>frontend-prep-consent</code>. Clearing
+          site data resets the banner.
+        </p>
+        <p>
+          When ads are enabled, Google and its partners may use cookies or similar technologies. Learn
+          more at{' '}
           <a
             href="https://policies.google.com/technologies/partner-sites"
             target="_blank"
@@ -47,27 +52,24 @@ export default function PrivacyPage() {
           >
             How Google uses information from sites or apps that use our services
           </a>
-          , and manage ad personalization via{' '}
+          , manage personalization at{' '}
           <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">
             Google Ads Settings
           </a>
-          .
-        </p>
-        <p>
-          Third-party vendors, including Google, may show ads based on cookies. You can opt out of
-          personalized advertising by visiting{' '}
+          , or opt out where available via{' '}
           <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">
             aboutads.info/choices
-          </a>{' '}
-          where available.
+          </a>
+          .
         </p>
       </ContentSection>
 
       <ContentSection title="Cookies and similar technologies">
         <p>
-          Cookies may be set by us or by third parties (such as advertising partners) to remember
-          preferences, measure traffic, or deliver ads. You can control cookies through your browser
-          settings. Blocking some cookies may affect ad personalization or certain site features.
+          We store theme, quiz progress, bookmarks, and your ads consent choice in your browser. When
+          you accept ads, third-party advertising cookies may also be set. You can clear site data or
+          reject ads to limit advertising cookies. Essential practice features do not require accepting
+          ads.
         </p>
       </ContentSection>
 
@@ -89,6 +91,13 @@ export default function PrivacyPage() {
         <p>
           We may update this Privacy Policy from time to time. The “Last updated” date at the top will
           change when we do. Continued use of the site after changes means you accept the updated policy.
+        </p>
+      </ContentSection>
+
+      <ContentSection title="Data deletion">
+        <p>
+          You can clear on-device progress anytime, or request deletion from us. See{' '}
+          <Link to="/delete-data">Request data deletion</Link>.
         </p>
       </ContentSection>
 

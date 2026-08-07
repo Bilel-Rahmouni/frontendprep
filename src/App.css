@@ -48,18 +48,42 @@
   color: inherit;
 }
 
-.site-header__mark {
-  display: grid;
-  place-items: center;
+.brand-logo {
+  display: inline-grid;
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: var(--text-h);
-  color: var(--bg);
-  font-family: var(--display);
-  font-weight: 700;
-  font-size: 0.7rem;
-  letter-spacing: -0.02em;
+  flex-shrink: 0;
+  place-items: center;
+  overflow: hidden;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.brand-logo__img {
+  grid-area: 1 / 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.brand-logo__img--on-dark {
+  display: none;
+}
+
+[data-theme='dark'] .brand-logo__img--on-light {
+  display: none;
+}
+
+[data-theme='dark'] .brand-logo__img--on-dark {
+  display: block;
+}
+
+.site-header__logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
 }
 
 .site-header__title {
@@ -1684,6 +1708,14 @@
   border-bottom: 1px solid var(--border);
 }
 
+.home-page__logo,
+.hub-page__logo {
+  width: 56px;
+  height: 56px;
+  margin-bottom: 8px;
+  border-radius: 14px;
+}
+
 .home-page__lead {
   margin: 14px 0 0;
   max-width: 32rem;
@@ -1776,6 +1808,16 @@
   font-size: 0.92rem;
   line-height: 1.55;
   color: var(--text-muted);
+}
+
+.home-app__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+#app {
+  scroll-margin-top: 24px;
 }
 
 .home-tracks {
@@ -1906,6 +1948,67 @@
   font-size: 1rem;
   line-height: 1.7;
   color: var(--text);
+}
+
+/* ── Ads + consent ── */
+
+.ad-slot {
+  margin: 28px 0;
+  min-height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ad-slot--dev {
+  min-height: 72px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.cookie-consent {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+  z-index: 300;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.cookie-consent__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface-solid);
+  box-shadow: var(--shadow);
+}
+
+.cookie-consent__text {
+  margin: 0;
+  flex: 1 1 240px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.cookie-consent__text a {
+  color: var(--text-h);
+  text-underline-offset: 3px;
+}
+
+.cookie-consent__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 /* ── Bottom credit bar (neutral class names — ad blockers hide "footer"/"mint") ── */

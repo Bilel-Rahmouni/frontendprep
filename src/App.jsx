@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import './App.css'
+import CookieConsent from '../components/CookieConsent'
 import Header from '../components/Header'
 import SiteFooter from '../components/SiteFooter'
 import { ThemeProvider } from '../context/ThemeProvider'
@@ -14,6 +15,7 @@ const GuidePage = lazy(() => import('./GuidePage'))
 const FaqPage = lazy(() => import('./FaqPage'))
 const AboutPage = lazy(() => import('./AboutPage'))
 const PrivacyPage = lazy(() => import('./PrivacyPage'))
+const DeleteDataPage = lazy(() => import('./DeleteDataPage'))
 const TermsPage = lazy(() => import('./TermsPage'))
 
 function RouteFallback() {
@@ -45,6 +47,7 @@ function Layout() {
             <Route path="faq" element={<FaqPage />} />
             <Route path="about" element={<AboutPage />} />
             <Route path="privacy" element={<PrivacyPage />} />
+            <Route path="delete-data" element={<DeleteDataPage />} />
             <Route path="terms" element={<TermsPage />} />
             <Route path="saved" element={<SavedQuestionsHub />} />
             <Route path="*" element={<Navigate to="/" replace />} />
@@ -52,6 +55,7 @@ function Layout() {
         </Suspense>
       </main>
       <SiteFooter />
+      <CookieConsent />
     </>
   )
 }

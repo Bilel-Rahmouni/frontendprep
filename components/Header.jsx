@@ -1,4 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom'
+import BrandLogo from './BrandLogo'
 import ThemeToggle from './ThemeToggle'
 
 const NAV = [
@@ -20,9 +21,7 @@ export default function Header() {
           onClick={() => navigate('/')}
           aria-label="frontendprep home"
         >
-          <span className="site-header__mark" aria-hidden>
-            FP
-          </span>
+          <BrandLogo className="site-header__logo" />
           <span className="site-header__title">frontendprep</span>
         </button>
 

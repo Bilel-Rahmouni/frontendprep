@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import BrandLogo from '../BrandLogo'
 import { PARTS, LEVELS, QUIZZES_PER_LEVEL, QUESTIONS_PER_LEVEL } from '../../data/catalog'
 import { useProgress } from '../../hooks/useProgress'
 
@@ -10,6 +11,7 @@ export default function TrackSelector({ getTrackProgress, onSelect }) {
     <section className="hub-page" aria-labelledby="tracks-heading">
       <div className="hub-page__hero">
         <div className="hub-page__hero-copy">
+          <BrandLogo className="hub-page__logo" alt="" />
           <p className="eyebrow">Practice</p>
           <h1 id="tracks-heading" className="display-title display-title--sm">
             Quiz tracks

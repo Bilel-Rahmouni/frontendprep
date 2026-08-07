@@ -12,7 +12,8 @@
     "lint": "eslint .",
     "validate": "node scripts/validate-questions.mjs",
     "shuffle-banks": "node scripts/shuffle-banks.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "mobile": "npm --prefix apps/mobile start"
   },
   "dependencies": {
     "react": "^19.2.7",

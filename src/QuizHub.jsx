@@ -36,6 +36,10 @@ export default function QuizHub() {
   const loadError = bank.key === bankKey ? bank.error : null
 
   useEffect(() => {
+    setAnswers(null)
+  }, [partId, levelId, quizIndexParam])
+
+  useEffect(() => {
     if (partId && !part) {
       navigate('/quiz', { replace: true })
       return

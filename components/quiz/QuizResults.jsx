@@ -8,7 +8,7 @@ import ShareResultCard from './ShareResultCard'
 
 function ScoreRing({ pct }) {
   const grade =
-    pct >= 90 ? 'Excellent' : pct >= 70 ? 'Good' : pct >= 50 ? 'Fair' : 'Keep going'
+    pct >= 90 ? 'Excellent' : pct >= PASS_THRESHOLD ? 'Passed' : pct >= 50 ? 'Fair' : 'Keep going'
 
   return (
     <div className="score-ring" style={{ '--pct': pct }} role="img" aria-label={`Score ${pct} percent`}>

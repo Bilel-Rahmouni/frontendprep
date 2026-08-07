@@ -1,4 +1,7 @@
 import { Link } from 'react-router-dom'
+import AdSlot from '../components/AdSlot'
+import BrandLogo from '../components/BrandLogo'
+import HomeAppCta from '../components/HomeAppCta'
 import PageMeta from '../components/PageMeta'
 import { PARTS } from '../data/catalog'
 import { GUIDES } from '../data/guides'
@@ -15,6 +18,7 @@ export default function HomePage() {
 
       <section className="home-page">
         <div className="home-page__hero">
+          <BrandLogo className="home-page__logo" alt="" />
           <p className="eyebrow">Exam simulator</p>
           <h1 className="display-title">frontendprep</h1>
           <p className="home-page__lead">
@@ -27,6 +31,9 @@ export default function HomePage() {
             <Link to="/guides" className="btn btn--ghost">
               Guides
             </Link>
+            <a href="#app" className="btn btn--ghost">
+              Get the app
+            </a>
           </div>
         </div>
 
@@ -48,6 +55,12 @@ export default function HomePage() {
             <span className="home-metrics__label">Tips</span>
           </li>
         </ul>
+
+        <AdSlot slot="home" />
+
+        <div id="app">
+          <HomeAppCta />
+        </div>
 
         <section className="home-section" aria-labelledby="home-tracks-heading">
           <div className="home-section__head">
