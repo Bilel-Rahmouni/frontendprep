@@ -71,6 +71,44 @@ function cleanPrerenderHtml(html, baseUrl) {
     .replaceAll(baseUrl, '')
 }
 
+async function createPage(browser) {
+  const page = await browser.newPage()
+  await page.setViewport({ width: 1280, height: 900 })
+
+  // Block third-party noise so waitUntil:'load' stays reliable.
+  await page.setRequestInterception(true)
+  page.on('request', (req) => {
+    const url = req.url()
+    if (
+      url.includes('googlesyndication.com') ||
+      url.includes('googleadservices.com') ||
+      url.includes('doubleclick.net') ||
+      url.includes('pagead2.')
+    ) {
+      req.abort()
+      return
+    }
+    req.continue()
+  })
+
+  // Prevent the PWA SW from registering during prerender.
+  await page.evaluateOnNewDocument(() => {
+    Object.defineProperty(navigator, 'serviceWorker', {
+      configurable: true,
+      get() {
+        return undefined
+      },
+    })
+    window.__PRERENDER_READY__ = false
+  })
+
+  page.on('pageerror', (err) => {
+    console.error(`Prerender pageerror: ${err?.message || err}`)
+  })
+
+  return page
+}
+
 const port = 4173
 const server = await startServer(port)
 const baseUrl = `http://127.0.0.1:${port}`
@@ -81,27 +119,22 @@ const browser = await puppeteer.launch({
   headless: true,
   args: ['--no-sandbox', '--disable-setuid-sandbox'],
 })
-const page = await browser.newPage()
-await page.setViewport({ width: 1280, height: 900 })
 
-// Surface runtime crashes that otherwise look like a generic "not ready" timeout.
-page.on('pageerror', (err) => {
-  console.error(`Prerender pageerror: ${err?.message || err}`)
-})
-
+let page = await createPage(browser)
 let done = 0
 
 for (const route of routes) {
   const url = `${baseUrl}${route}`
   process.stdout.write(`Prerender ${++done}/${routes.length} ${route}\n`)
 
-  // Avoid PWA SW caching interfering with chunk loads across routes.
-  await page.goto(url, { waitUntil: 'networkidle0', timeout: 90000 })
-  await page.evaluate(async () => {
-    if (!('serviceWorker' in navigator)) return
-    const regs = await navigator.serviceWorker.getRegistrations()
-    await Promise.all(regs.map((r) => r.unregister()))
-  })
+  // Fresh page every 12 routes avoids Chromium memory / hang buildup.
+  if (done > 1 && (done - 1) % 12 === 0) {
+    await page.close().catch(() => {})
+    page = await createPage(browser)
+  }
+
+  // 'load' is enough; networkidle0 hangs when anything keeps a socket open.
+  await page.goto(url, { waitUntil: 'load', timeout: 60000 })
 
   try {
     await page.waitForFunction(
@@ -128,6 +161,7 @@ for (const route of routes) {
   await fs.writeFile(outPath, html)
 }
 
+await page.close().catch(() => {})
 await browser.close()
 
 await new Promise((resolve, reject) => {

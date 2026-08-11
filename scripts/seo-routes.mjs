@@ -49,20 +49,13 @@ export function getSeoRoutes() {
   return routes
 }
 
-/** All app routes worth writing to dist, including thin shells and saved */
+/**
+ * Routes to snapshot into dist HTML.
+ * Quiz runners (/0–4, /exam) stay client-only — they are noindex, load large
+ * banks, and break networkidle prerender. SPA fallback still serves them.
+ */
 export function getPrerenderRoutes() {
-  const routes = [...getSeoRoutes(), '/saved']
-
-  for (const part of PART_IDS) {
-    for (const level of LEVEL_IDS) {
-      for (let i = 0; i < 5; i++) {
-        routes.push(`/quiz/${part}/${level}/${i}`)
-      }
-      routes.push(`/quiz/${part}/${level}/exam`)
-    }
-  }
-
-  return routes
+  return [...getSeoRoutes(), '/saved']
 }
 
 export function routePriority(route) {
