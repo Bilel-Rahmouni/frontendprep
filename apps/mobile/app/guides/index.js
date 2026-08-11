@@ -8,7 +8,7 @@ export default function GuidesScreen() {
   const router = useRouter()
 
   return (
-    <Screen title="Guides" subtitle="Long-form study articles from the web app.">
+    <Screen>
       <View style={{ gap: 10 }}>
         {GUIDES.map((guide) => (
           <RowButton

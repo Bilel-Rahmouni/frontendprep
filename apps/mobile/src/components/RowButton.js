@@ -1,17 +1,26 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { colors, spacing } from '../theme'
+import { spacing } from '../theme'
+import { useTheme } from '../theme/ThemeContext'
 
 export default function RowButton({ title, meta, onPress, right = '→' }) {
+  const { colors } = useTheme()
+
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
+      style={({ pressed }) => [
+        styles.row,
+        {
+          backgroundColor: pressed ? colors.bg : colors.surface,
+          borderColor: colors.border,
+        },
+      ]}
     >
       <View style={styles.copy}>
-        <Text style={styles.title}>{title}</Text>
-        {meta ? <Text style={styles.meta}>{meta}</Text> : null}
+        <Text style={[styles.title, { color: colors.textH }]}>{title}</Text>
+        {meta ? <Text style={[styles.meta, { color: colors.textMuted }]}>{meta}</Text> : null}
       </View>
-      <Text style={styles.right}>{right}</Text>
+      <Text style={[styles.right, { color: colors.textMuted }]}>{right}</Text>
     </Pressable>
   )
 }
@@ -24,13 +33,8 @@ const styles = StyleSheet.create({
     gap: spacing.md,
     paddingVertical: 16,
     paddingHorizontal: spacing.md,
-    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: colors.border,
     borderRadius: 12,
-  },
-  rowPressed: {
-    backgroundColor: colors.bg,
   },
   copy: {
     flex: 1,
@@ -39,14 +43,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: '700',
-    color: colors.textH,
   },
   meta: {
     fontSize: 13,
-    color: colors.textMuted,
   },
   right: {
-    fontSize: 16,
-    color: colors.textMuted,
+    fontSize: 18,
+    fontWeight: '600',
   },
 })

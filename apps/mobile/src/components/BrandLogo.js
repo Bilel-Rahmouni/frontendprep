@@ -1,13 +1,16 @@
 import { Image, StyleSheet, View } from 'react-native'
-import { colors } from '../theme'
+import { useTheme } from '../theme/ThemeContext'
 
-const logo = require('../../assets/logo.png')
+const logoLight = require('../../assets/logo-on-white.png')
+const logoDark = require('../../assets/logo-on-black.png')
 
 export default function BrandLogo({ size = 40, style }) {
+  const { isDark } = useTheme()
+
   return (
     <View style={[styles.wrap, { width: size, height: size, borderRadius: size * 0.22 }, style]}>
       <Image
-        source={logo}
+        source={isDark ? logoDark : logoLight}
         style={styles.logo}
         resizeMode="cover"
         accessibilityLabel="frontendprep"
@@ -19,9 +22,6 @@ export default function BrandLogo({ size = 40, style }) {
 const styles = StyleSheet.create({
   wrap: {
     overflow: 'hidden',
-    backgroundColor: colors.surface,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.border,
   },
   logo: {
     width: '100%',

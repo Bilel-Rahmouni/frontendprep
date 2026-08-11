@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useCallback, useState } from 'react'
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router'
 import { View } from 'react-native'
 import {
   getLevel,
@@ -24,38 +24,36 @@ export default function QuizListScreen() {
   const router = useRouter()
   const part = getPart(partId)
   const level = getLevel(levelId)
-  const { getQuizProgress, getLevelProgress } = useProgress()
-  const [quizProg, setQuizProg] = useState({})
-  const [levelProg, setLevelProg] = useState(null)
+  const { getLevelProgressBundle, version } = useProgress()
+  const [bundle, setBundle] = useState(null)
 
-  useEffect(() => {
-    if (!partId || !levelId) return undefined
-    let cancelled = false
-    const quizzes = getQuizzesForLevel(partId, levelId)
-    Promise.all([
-      getLevelProgress(partId, levelId),
-      Promise.all(
-        quizzes.map(async (q) => {
-          const p = await getQuizProgress(q.id)
-          return [q.id, p]
-        }),
-      ),
-    ]).then(([lp, entries]) => {
-      if (!cancelled) {
-        setLevelProg(lp)
-        setQuizProg(Object.fromEntries(entries))
+  useFocusEffect(
+    useCallback(() => {
+      if (!partId || !levelId) return undefined
+      let cancelled = false
+      getLevelProgressBundle(partId, levelId).then((data) => {
+        if (!cancelled) setBundle(data)
+      })
+      return () => {
+        cancelled = true
       }
-    })
-    return () => {
-      cancelled = true
-    }
-  }, [partId, levelId, getQuizProgress, getLevelProgress])
+    }, [partId, levelId, getLevelProgressBundle, version]),
+  )
 
   if (!part || !level) {
     return <Screen subtitle="Not found." />
   }
 
   const quizzes = getQuizzesForLevel(partId, levelId)
+  const quizProg = Object.fromEntries((bundle?.quizzes || []).map((q) => [q.id, q]))
+  const examProg = bundle?.exam
+  const levelProg = bundle
+
+  let examMeta = `Random ${QUESTIONS_PER_QUIZ} Q · ${getQuizTimeLabel()}`
+  if (examProg?.bestPct != null) {
+    examMeta += ` · best ${examProg.bestPct}%`
+    if (examProg.passed) examMeta += ' · passed'
+  }
 
   return (
     <Screen
@@ -66,7 +64,7 @@ export default function QuizListScreen() {
       <View style={{ gap: 10 }}>
         <RowButton
           title="Mock exam"
-          meta={`Random ${QUESTIONS_PER_QUIZ} Q · ${getQuizTimeLabel()}`}
+          meta={examMeta}
           onPress={() => router.push(`/quiz/${partId}/${levelId}/exam`)}
         />
         {quizzes.map((quiz, i) => {

@@ -1,5 +1,16 @@
 /**
  * Metro cannot reliably resolve dynamic imports into scripts/banks/*.mjs.
- * Use the content package static bank imports (Metro-friendly).
+ * Use the content package lazy bank loaders (Metro-friendly + cached).
  */
-export { loadQuestions } from '../../../../packages/content/src/questions.js'
+import { InteractionManager } from 'react-native'
+import { loadQuestions as loadFromContent } from '../../../../packages/content/src/questions.js'
+
+export function loadQuestions(partId, levelId) {
+  return new Promise((resolve, reject) => {
+    const task = InteractionManager.runAfterInteractions(() => {
+      loadFromContent(partId, levelId).then(resolve, reject)
+    })
+    // Older RN returns a cancelable handle; ignore if plain void
+    void task
+  })
+}

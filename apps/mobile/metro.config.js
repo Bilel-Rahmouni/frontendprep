@@ -26,4 +26,15 @@ config.resolver.extraNodeModules = {
 config.resolver.assetExts = config.resolver.assetExts.filter((ext) => ext !== 'mjs')
 config.resolver.sourceExts = [...new Set([...config.resolver.sourceExts, 'mjs', 'js'])]
 
+// Defer evaluating require()d modules (question banks) until first use
+config.transformer = {
+  ...config.transformer,
+  getTransformOptions: async () => ({
+    transform: {
+      experimentalImportSupport: false,
+      inlineRequires: true,
+    },
+  }),
+}
+
 module.exports = config

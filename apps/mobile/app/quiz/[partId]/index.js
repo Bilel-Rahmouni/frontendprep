@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useCallback, useState } from 'react'
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router'
 import { View } from 'react-native'
 import { getPart, LEVELS } from '@frontendprep/content'
 import RowButton from '../../../src/components/RowButton'
@@ -16,24 +16,21 @@ export default function LevelsScreen() {
   const partId = param(partIdParam)
   const router = useRouter()
   const part = getPart(partId)
-  const { getLevelProgress } = useProgress()
+  const { getTrackLevelsProgress, version } = useProgress()
   const [progress, setProgress] = useState({})
 
-  useEffect(() => {
-    if (!partId) return undefined
-    let cancelled = false
-    Promise.all(
-      LEVELS.map(async (level) => {
-        const p = await getLevelProgress(partId, level.id)
-        return [level.id, p]
-      }),
-    ).then((entries) => {
-      if (!cancelled) setProgress(Object.fromEntries(entries))
-    })
-    return () => {
-      cancelled = true
-    }
-  }, [partId, getLevelProgress])
+  useFocusEffect(
+    useCallback(() => {
+      if (!partId) return undefined
+      let cancelled = false
+      getTrackLevelsProgress(partId).then((data) => {
+        if (!cancelled) setProgress(data)
+      })
+      return () => {
+        cancelled = true
+      }
+    }, [partId, getTrackLevelsProgress, version]),
+  )
 
   if (!part) {
     return <Screen subtitle="Track not found." />

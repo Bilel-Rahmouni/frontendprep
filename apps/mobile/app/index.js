@@ -1,109 +1,46 @@
-import { Link } from 'expo-router'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { useRouter } from 'expo-router'
+import { StyleSheet, View } from 'react-native'
 import { GUIDES, PARTS, PREP_TIPS } from '@frontendprep/content'
+import LegalLinks from '../src/components/LegalLinks'
+import RowButton from '../src/components/RowButton'
 import Screen from '../src/components/Screen'
-import { colors, spacing } from '../src/theme'
+import { spacing } from '../src/theme'
 
 export default function HomeScreen() {
+  const router = useRouter()
+
   return (
-    <Screen subtitle="Timed HTML, CSS, React, and frontend practice — same content as the web app.">
-      <View style={styles.metrics}>
-        <Metric value="1,200" label="Questions" />
-        <Metric value={String(PARTS.length)} label="Tracks" />
-        <Metric value={String(GUIDES.length)} label="Guides" />
-        <Metric value={String(PREP_TIPS.length)} label="Tips" />
+    <Screen>
+      <View style={styles.nav}>
+        <RowButton
+          title="Quizzes"
+          meta={`${PARTS.length} tracks · 1,200 questions`}
+          onPress={() => router.push('/quiz')}
+        />
+        <RowButton
+          title="Guides"
+          meta={`${GUIDES.length} study articles`}
+          onPress={() => router.push('/guides')}
+        />
+        <RowButton
+          title="Prep tips"
+          meta={`${PREP_TIPS.length} short tips`}
+          onPress={() => router.push('/prep')}
+        />
+        <RowButton
+          title="Saved"
+          meta="Bookmarked questions"
+          onPress={() => router.push('/saved')}
+        />
       </View>
 
-      <Link href="/quiz" asChild>
-        <Pressable style={styles.primary}>
-          <Text style={styles.primaryText}>Start quizzes</Text>
-        </Pressable>
-      </Link>
-
-      <View style={styles.row}>
-        <Link href="/guides" asChild>
-          <Pressable style={styles.secondary}>
-            <Text style={styles.secondaryText}>Guides</Text>
-          </Pressable>
-        </Link>
-        <Link href="/prep" asChild>
-          <Pressable style={styles.secondary}>
-            <Text style={styles.secondaryText}>Prep tips</Text>
-          </Pressable>
-        </Link>
-      </View>
-
-      <Link href="/saved" asChild>
-        <Pressable style={styles.secondary}>
-          <Text style={styles.secondaryText}>Saved questions</Text>
-        </Pressable>
-      </Link>
+      <LegalLinks />
     </Screen>
   )
 }
 
-function Metric({ value, label }) {
-  return (
-    <View style={styles.metric}>
-      <Text style={styles.metricValue}>{value}</Text>
-      <Text style={styles.metricLabel}>{label}</Text>
-    </View>
-  )
-}
-
 const styles = StyleSheet.create({
-  metrics: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: colors.border,
-  },
-  metric: {
-    width: '50%',
-    paddingVertical: spacing.md,
-    paddingRight: spacing.md,
-  },
-  metricValue: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: colors.textH,
-  },
-  metricLabel: {
-    marginTop: 4,
-    fontSize: 11,
-    fontWeight: '500',
-    letterSpacing: 0.6,
-    textTransform: 'uppercase',
-    color: colors.textMuted,
-  },
-  primary: {
-    backgroundColor: colors.textH,
-    borderRadius: 10,
-    paddingVertical: 14,
-    alignItems: 'center',
-  },
-  primaryText: {
-    color: colors.bg,
-    fontWeight: '600',
-    fontSize: 15,
-  },
-  row: {
-    flexDirection: 'row',
+  nav: {
     gap: spacing.sm,
-  },
-  secondary: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 10,
-    paddingVertical: 14,
-    alignItems: 'center',
-    backgroundColor: colors.surface,
-  },
-  secondaryText: {
-    color: colors.textH,
-    fontWeight: '600',
-    fontSize: 15,
   },
 })

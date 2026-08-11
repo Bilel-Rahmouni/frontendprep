@@ -1,24 +1,41 @@
-import { useLocalSearchParams } from 'expo-router'
+import { useEffect } from 'react'
+import { useLocalSearchParams, useNavigation } from 'expo-router'
 import { StyleSheet, Text, View } from 'react-native'
 import { getGuide } from '@frontendprep/content'
 import Screen from '../../src/components/Screen'
-import { colors, spacing } from '../../src/theme'
+import { spacing } from '../../src/theme'
+import { useTheme } from '../../src/theme/ThemeContext'
+
+function param(value) {
+  if (Array.isArray(value)) return value[0]
+  return value == null ? '' : String(value)
+}
 
 export default function GuideDetailScreen() {
-  const { slug } = useLocalSearchParams()
+  const { slug: slugParam } = useLocalSearchParams()
+  const slug = param(slugParam)
   const guide = getGuide(slug)
+  const { colors } = useTheme()
+  const navigation = useNavigation()
+
+  useEffect(() => {
+    navigation.setOptions({ title: guide?.title || 'Guide' })
+  }, [navigation, guide?.title])
 
   if (!guide) {
-    return <Screen title="Guide not found" />
+    return <Screen subtitle="Guide not found." />
   }
 
   return (
-    <Screen title={guide.title} subtitle={`${guide.category} · ${guide.readMinutes} min read`}>
+    <Screen subtitle={`${guide.category} · ${guide.readMinutes} min`}>
       {guide.sections.map((section) => (
-        <View key={section.heading} style={styles.section}>
-          <Text style={styles.heading}>{section.heading}</Text>
+        <View
+          key={section.heading}
+          style={[styles.section, { borderBottomColor: colors.border }]}
+        >
+          <Text style={[styles.heading, { color: colors.textH }]}>{section.heading}</Text>
           {section.paragraphs.map((p, i) => (
-            <Text key={`${section.heading}-${i}`} style={styles.p}>
+            <Text key={`${section.heading}-${i}`} style={[styles.p, { color: colors.text }]}>
               {p}
             </Text>
           ))}
@@ -33,16 +50,13 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
     paddingBottom: spacing.md,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border,
   },
   heading: {
     fontSize: 18,
     fontWeight: '700',
-    color: colors.textH,
   },
   p: {
     fontSize: 15,
     lineHeight: 23,
-    color: colors.text,
   },
 })

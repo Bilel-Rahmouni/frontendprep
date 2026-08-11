@@ -1,7 +1,7 @@
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-const logo = require('../../assets/logo.png')
+const logo = require('../../assets/logo-on-black.png')
 
 export default function SplashScreen() {
   return (

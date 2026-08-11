@@ -1,37 +1,39 @@
-import { readJson, writeJson } from './storage'
+import { readJson, updateJson } from './storage'
 
 const KEY = 'bookmarks'
 
-async function loadAll() {
-  return readJson(KEY, [])
-}
-
-async function saveAll(ids) {
-  await writeJson(KEY, ids)
+function normalize(ids) {
+  return Array.isArray(ids) ? ids.filter((id) => typeof id === 'string') : []
 }
 
 export async function getBookmarks() {
-  return loadAll()
+  return normalize(await readJson(KEY, []))
 }
 
 export async function isBookmarked(questionId) {
-  const ids = await loadAll()
+  const ids = await getBookmarks()
   return ids.includes(questionId)
 }
 
 export async function toggleBookmark(questionId) {
-  const ids = await loadAll()
-  const idx = ids.indexOf(questionId)
-  if (idx >= 0) {
-    ids.splice(idx, 1)
-  } else {
-    ids.push(questionId)
-  }
-  await saveAll(ids)
+  const ids = await updateJson(
+    KEY,
+    (current) => {
+      const list = normalize(current)
+      const idx = list.indexOf(questionId)
+      if (idx >= 0) list.splice(idx, 1)
+      else list.push(questionId)
+      return list
+    },
+    [],
+  )
   return ids.includes(questionId)
 }
 
 export async function removeBookmark(questionId) {
-  const ids = await loadAll()
-  await saveAll(ids.filter((id) => id !== questionId))
+  await updateJson(
+    KEY,
+    (current) => normalize(current).filter((id) => id !== questionId),
+    [],
+  )
 }

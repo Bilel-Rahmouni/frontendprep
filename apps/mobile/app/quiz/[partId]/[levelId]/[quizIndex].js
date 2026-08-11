@@ -1,6 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useLocalSearchParams, useRouter } from 'expo-router'
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { useLocalSearchParams, useNavigation, useRouter } from 'expo-router'
+import {
+  ActivityIndicator,
+  Alert,
+  AppState,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
 import {
   formatQuizTime,
   getLevel,
@@ -15,7 +24,8 @@ import { useBookmarks } from '../../../../src/hooks/useBookmarks'
 import { useProgress } from '../../../../src/hooks/useProgress'
 import { getExamMeta, shuffleQuestions } from '../../../../src/lib/examMode'
 import { loadQuestions } from '../../../../src/lib/loadQuestions'
-import { colors, spacing } from '../../../../src/theme'
+import { spacing } from '../../../../src/theme'
+import { useTheme } from '../../../../src/theme/ThemeContext'
 
 function param(value) {
   if (Array.isArray(value)) return value[0]
@@ -28,6 +38,8 @@ export default function QuizRunnerScreen() {
   const levelId = param(params.levelId)
   const quizIndexParam = param(params.quizIndex)
   const router = useRouter()
+  const navigation = useNavigation()
+  const { colors } = useTheme()
   const isExam = quizIndexParam === 'exam'
   const quizIndex = isExam ? null : Number(quizIndexParam)
 
@@ -44,13 +56,21 @@ export default function QuizRunnerScreen() {
   const [secondsLeft, setSecondsLeft] = useState(QUIZ_TIME_SEC)
   const [done, setDone] = useState(false)
   const [review, setReview] = useState(false)
-  const [savedOnce, setSavedOnce] = useState(false)
-  const answersRef = useRef(answers)
-  const examSeed = useRef(0)
+  const [examSeed, setExamSeed] = useState(0)
+  const [saveError, setSaveError] = useState(false)
+  const [saveTick, setSaveTick] = useState(0)
+  const savedRef = useRef(false)
+  const endsAtRef = useRef(null)
+  const mountedRef = useRef(true)
+  const bankKeyRef = useRef('')
+  const bankKey = `${partId}/${levelId}`
 
   useEffect(() => {
-    answersRef.current = answers
-  }, [answers])
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+    }
+  }, [])
 
   const quiz = useMemo(() => {
     if (!part || !level) return null
@@ -63,76 +83,148 @@ export default function QuizRunnerScreen() {
     if (!bank.length || !quiz) return []
     if (isExam) return shuffleQuestions(bank, QUESTIONS_PER_QUIZ)
     return bank.slice(quiz.start, quiz.end)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bank, quiz, isExam, examSeed.current])
+  }, [bank, quiz, isExam, examSeed])
 
-  function resetRun() {
+  const resetRun = useCallback(() => {
     setCurrent(0)
     setAnswers({})
     setSecondsLeft(QUIZ_TIME_SEC)
     setDone(false)
     setReview(false)
-    setSavedOnce(false)
-    if (isExam) examSeed.current += 1
-  }
+    setSaveError(false)
+    savedRef.current = false
+    endsAtRef.current = Date.now() + QUIZ_TIME_SEC * 1000
+    if (isExam) setExamSeed((s) => s + 1)
+  }, [isExam])
+
+  useEffect(() => {
+    if (done || loading || error) return undefined
+    const sub = navigation.addListener('beforeRemove', (e) => {
+      e.preventDefault()
+      Alert.alert('Leave quiz?', 'This attempt will not be saved.', [
+        { text: 'Stay', style: 'cancel' },
+        {
+          text: 'Leave',
+          style: 'destructive',
+          onPress: () => navigation.dispatch(e.data.action),
+        },
+      ])
+    })
+    return sub
+  }, [navigation, done, loading, error])
 
   useEffect(() => {
     let cancelled = false
-    setLoading(true)
     setError(null)
+
+    // Same level bank already in memory — skip spinner when switching quizzes
+    if (bankKeyRef.current === bankKey) {
+      resetRun()
+      setLoading(false)
+      return undefined
+    }
+
+    setLoading(true)
     resetRun()
     loadQuestions(partId, levelId)
       .then((qs) => {
-        if (!cancelled) {
-          setBank(qs)
-          setLoading(false)
-        }
+        if (cancelled) return
+        bankKeyRef.current = bankKey
+        setBank(qs)
+        setLoading(false)
+        endsAtRef.current = Date.now() + QUIZ_TIME_SEC * 1000
       })
       .catch((err) => {
-        if (!cancelled) {
-          setError(err?.message || 'Could not load questions.')
-          setLoading(false)
-        }
+        if (cancelled) return
+        setError(err?.message || 'Could not load questions.')
+        setLoading(false)
       })
     return () => {
       cancelled = true
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [partId, levelId, quizIndexParam])
+  }, [partId, levelId, quizIndexParam, resetRun, bankKey])
 
   const finishQuiz = useCallback(() => {
     setDone(true)
   }, [])
 
   useEffect(() => {
-    if (!done || !quiz || !questions.length || savedOnce) return
+    if (!done || !quiz || !questions.length || savedRef.current) return
+    let cancelled = false
+    setSaveError(false)
     const correct = questions.reduce((n, q, i) => n + (answers[i] === q.correct ? 1 : 0), 0)
     const pct = Math.round((correct / questions.length) * 100)
-    setSavedOnce(true)
-    saveResult(quiz.id, { pct, score: correct, total: questions.length })
-  }, [done, quiz, questions, answers, savedOnce, saveResult])
+    saveResult(quiz.id, { pct, score: correct, total: questions.length }).then((entry) => {
+      if (cancelled) return
+      if (entry) savedRef.current = true
+      else setSaveError(true)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [done, quiz, questions, answers, saveResult, saveTick])
 
   useEffect(() => {
     if (loading || error || done || !questions.length) return undefined
-    let remaining = QUIZ_TIME_SEC
-    setSecondsLeft(remaining)
-    const id = setInterval(() => {
-      remaining -= 1
+
+    let intervalId
+    let finished = false
+
+    const syncFromDeadline = () => {
+      if (finished) return
+      const endsAt = endsAtRef.current
+      if (!endsAt) return
+      const remaining = Math.max(0, Math.ceil((endsAt - Date.now()) / 1000))
       setSecondsLeft(remaining)
       if (remaining <= 0) {
-        clearInterval(id)
+        finished = true
+        if (intervalId) clearInterval(intervalId)
         finishQuiz()
       }
-    }, 1000)
-    return () => clearInterval(id)
-  }, [loading, error, done, questions.length, finishQuiz, quizIndexParam])
+    }
+
+    syncFromDeadline()
+    intervalId = setInterval(syncFromDeadline, 250)
+
+    const onAppState = (state) => {
+      if (state === 'active') syncFromDeadline()
+    }
+    const sub = AppState.addEventListener('change', onAppState)
+
+    return () => {
+      if (intervalId) clearInterval(intervalId)
+      sub.remove()
+    }
+  }, [loading, error, done, questions.length, finishQuiz, quizIndexParam, examSeed])
+
+  const retryLoad = () => {
+    setLoading(true)
+    setError(null)
+    bankKeyRef.current = ''
+    loadQuestions(partId, levelId)
+      .then((qs) => {
+        if (!mountedRef.current) return
+        bankKeyRef.current = bankKey
+        setBank(qs)
+        resetRun()
+        setLoading(false)
+      })
+      .catch((err) => {
+        if (!mountedRef.current) return
+        setError(err?.message || 'Could not load questions.')
+        setLoading(false)
+      })
+  }
 
   if (!part || !level || !quiz) {
     return (
-      <View style={styles.center}>
-        <Text style={styles.error}>Quiz not found</Text>
-        <Pressable style={styles.primary} onPress={() => router.replace('/quiz')}>
-          <Text style={styles.primaryText}>Back to tracks</Text>
+      <View style={[styles.center, { backgroundColor: colors.bg }]}>
+        <Text style={[styles.error, { color: colors.textMuted }]}>Quiz not found</Text>
+        <Pressable
+          style={[styles.primary, { backgroundColor: colors.textH }]}
+          onPress={() => router.replace('/quiz')}
+        >
+          <Text style={[styles.primaryText, { color: colors.bg }]}>Back to tracks</Text>
         </Pressable>
       </View>
     )
@@ -140,7 +232,7 @@ export default function QuizRunnerScreen() {
 
   if (loading) {
     return (
-      <View style={styles.center}>
+      <View style={[styles.center, { backgroundColor: colors.bg }]}>
         <ActivityIndicator color={colors.textH} />
       </View>
     )
@@ -148,93 +240,161 @@ export default function QuizRunnerScreen() {
 
   if (error) {
     return (
-      <View style={styles.center}>
-        <Text style={styles.error}>{error}</Text>
-        <Pressable
-          style={styles.primary}
-          onPress={() => {
-            setLoading(true)
-            setError(null)
-            loadQuestions(partId, levelId)
-              .then((qs) => {
-                setBank(qs)
-                resetRun()
-                setLoading(false)
-              })
-              .catch((err) => {
-                setError(err?.message || 'Could not load questions.')
-                setLoading(false)
-              })
-          }}
-        >
-          <Text style={styles.primaryText}>Retry</Text>
+      <View style={[styles.center, { backgroundColor: colors.bg }]}>
+        <Text style={[styles.error, { color: colors.textMuted }]}>{error}</Text>
+        <Pressable style={[styles.primary, { backgroundColor: colors.textH }]} onPress={retryLoad}>
+          <Text style={[styles.primaryText, { color: colors.bg }]}>Retry</Text>
         </Pressable>
       </View>
     )
   }
 
   if (done) {
+    if (!questions.length) {
+      return (
+        <View style={[styles.center, { backgroundColor: colors.bg }]}>
+          <Text style={[styles.error, { color: colors.textMuted }]}>No questions loaded.</Text>
+          <Pressable
+            style={[styles.primary, { backgroundColor: colors.textH }]}
+            onPress={() => router.back()}
+          >
+            <Text style={[styles.primaryText, { color: colors.bg }]}>Back</Text>
+          </Pressable>
+        </View>
+      )
+    }
+
     const correct = questions.reduce((n, q, i) => n + (answers[i] === q.correct ? 1 : 0), 0)
     const pct = Math.round((correct / questions.length) * 100)
     const passed = pct >= PASS_THRESHOLD
 
     if (review) {
       return (
-        <ScrollView style={styles.root} contentContainerStyle={styles.pad}>
-          <Text style={styles.heading}>Review</Text>
+        <ScrollView
+          style={[styles.root, { backgroundColor: colors.bg }]}
+          contentContainerStyle={styles.pad}
+        >
+          <Text style={[styles.heading, { color: colors.textH }]}>Review</Text>
           {questions.map((q, i) => {
             const selected = answers[i]
             const ok = selected === q.correct
             const bookmarked = isBookmarked(q.id)
             return (
-              <View key={q.id} style={styles.reviewCard}>
+              <View
+                key={q.id}
+                style={[
+                  styles.reviewCard,
+                  { borderColor: colors.border, backgroundColor: colors.surface },
+                ]}
+              >
                 <View style={styles.reviewHead}>
-                  <Text style={styles.reviewMeta}>
+                  <Text style={[styles.reviewMeta, { color: colors.textMuted }]}>
                     Q{i + 1} · {ok ? 'Correct' : selected == null ? 'Skipped' : 'Incorrect'}
                   </Text>
                   <Pressable onPress={() => toggleBookmark(q.id)} hitSlop={8}>
-                    <Text style={styles.bookmark}>{bookmarked ? '★ Saved' : '☆ Save'}</Text>
+                    <Text style={[styles.bookmark, { color: colors.accent }]}>
+                      {bookmarked ? '★ Saved' : '☆ Save'}
+                    </Text>
                   </Pressable>
                 </View>
-                <Text style={styles.question}>{q.question}</Text>
-                <Text style={styles.explanation}>{q.explanation}</Text>
+                <Text style={[styles.question, { color: colors.textH }]}>{q.question}</Text>
+                {q.demo?.code ? (
+                  <Text style={[styles.code, { color: colors.text, backgroundColor: colors.surface2 }]}>
+                    {q.demo.code}
+                  </Text>
+                ) : null}
+                <View style={styles.options}>
+                  {q.options.map((option, oi) => {
+                    const isCorrect = oi === q.correct
+                    const isSelected = selected === oi
+                    const borderColor = isCorrect
+                      ? colors.success
+                      : isSelected
+                        ? colors.error
+                        : colors.border
+                    return (
+                      <View
+                        key={`${q.id}-opt-${oi}`}
+                        style={[
+                          styles.option,
+                          {
+                            borderColor,
+                            backgroundColor: isCorrect || isSelected ? colors.bg : colors.surface,
+                          },
+                        ]}
+                      >
+                        <Text style={[styles.optionText, { color: colors.textH }]}>
+                          {option}
+                          {isCorrect ? ' · correct' : isSelected ? ' · yours' : ''}
+                        </Text>
+                      </View>
+                    )
+                  })}
+                </View>
+                <Text style={[styles.explanation, { color: colors.text }]}>{q.explanation}</Text>
               </View>
             )
           })}
-          <Pressable style={styles.primary} onPress={() => setReview(false)}>
-            <Text style={styles.primaryText}>Back to results</Text>
+          <Pressable
+            style={[styles.primary, { backgroundColor: colors.textH }]}
+            onPress={() => setReview(false)}
+          >
+            <Text style={[styles.primaryText, { color: colors.bg }]}>Back to results</Text>
           </Pressable>
         </ScrollView>
       )
     }
 
     return (
-      <View style={[styles.root, styles.pad]}>
-        <Text style={styles.heading}>Results</Text>
-        <Text style={styles.score}>
+      <ScrollView
+        style={[styles.root, { backgroundColor: colors.bg }]}
+        contentContainerStyle={styles.pad}
+      >
+        <Text style={[styles.heading, { color: colors.textH }]}>Results</Text>
+        <Text style={[styles.score, { color: colors.textH }]}>
           {correct}/{questions.length} · {pct}%
         </Text>
-        <Text style={[styles.pass, !passed && styles.fail]}>
+        <Text style={{ fontSize: 15, fontWeight: '600', color: passed ? colors.success : colors.textMuted }}>
           {passed ? 'Passed' : 'Keep practicing'}
         </Text>
-        <Pressable style={styles.primary} onPress={() => setReview(true)}>
-          <Text style={styles.primaryText}>Review answers</Text>
+        {saveError ? (
+          <View style={{ gap: 8 }}>
+            <Text style={[styles.error, { color: colors.error }]}>Could not save progress.</Text>
+            <Pressable
+              style={[styles.primary, { backgroundColor: colors.textH }]}
+              onPress={() => setSaveTick((n) => n + 1)}
+            >
+              <Text style={[styles.primaryText, { color: colors.bg }]}>Retry save</Text>
+            </Pressable>
+          </View>
+        ) : null}
+        <Pressable
+          style={[styles.primary, { backgroundColor: colors.textH }]}
+          onPress={() => setReview(true)}
+        >
+          <Text style={[styles.primaryText, { color: colors.bg }]}>Review answers</Text>
         </Pressable>
-        <Pressable style={styles.secondary} onPress={resetRun}>
-          <Text style={styles.secondaryText}>Retry</Text>
+        <Pressable
+          style={[styles.secondary, { borderColor: colors.border, backgroundColor: colors.surface }]}
+          onPress={resetRun}
+        >
+          <Text style={[styles.secondaryText, { color: colors.textH }]}>Retry</Text>
         </Pressable>
-        <Pressable style={styles.secondary} onPress={() => router.back()}>
-          <Text style={styles.secondaryText}>Back to quizzes</Text>
+        <Pressable
+          style={[styles.secondary, { borderColor: colors.border, backgroundColor: colors.surface }]}
+          onPress={() => router.back()}
+        >
+          <Text style={[styles.secondaryText, { color: colors.textH }]}>Back to quizzes</Text>
         </Pressable>
-      </View>
+      </ScrollView>
     )
   }
 
   const q = questions[current]
   if (!q) {
     return (
-      <View style={styles.center}>
-        <Text style={styles.error}>No questions loaded.</Text>
+      <View style={[styles.center, { backgroundColor: colors.bg }]}>
+        <Text style={[styles.error, { color: colors.textMuted }]}>No questions loaded.</Text>
       </View>
     )
   }
@@ -243,50 +403,73 @@ export default function QuizRunnerScreen() {
   const isLast = current === questions.length - 1
 
   return (
-    <ScrollView style={styles.root} contentContainerStyle={styles.pad}>
+    <ScrollView
+      style={[styles.root, { backgroundColor: colors.bg }]}
+      contentContainerStyle={styles.pad}
+    >
       <View style={styles.top}>
-        <Text style={styles.meta}>
+        <Text style={[styles.meta, { color: colors.textMuted }]}>
           {current + 1}/{questions.length}
         </Text>
-        <Text style={[styles.timer, secondsLeft <= 30 && styles.timerUrgent]}>
+        <Text
+          style={[
+            styles.timer,
+            { color: colors.textH },
+            secondsLeft <= 30 && { color: colors.error },
+          ]}
+        >
           {formatQuizTime(secondsLeft)}
         </Text>
       </View>
-      <Text style={styles.question}>{q.question}</Text>
+      <Text style={[styles.question, { color: colors.textH }]}>{q.question}</Text>
       <View style={styles.options}>
         {q.options.map((option, i) => {
           const active = selected === i
           return (
             <Pressable
               key={`${q.id}-${i}`}
-              style={[styles.option, active && styles.optionActive]}
+              style={[
+                styles.option,
+                {
+                  borderColor: active ? colors.textH : colors.border,
+                  backgroundColor: active ? colors.bg : colors.surface,
+                },
+              ]}
               onPress={() => setAnswers((prev) => ({ ...prev, [current]: i }))}
             >
-              <Text style={[styles.optionText, active && styles.optionTextActive]}>{option}</Text>
+              <Text
+                style={[
+                  styles.optionText,
+                  { color: colors.textH },
+                  active && styles.optionTextActive,
+                ]}
+              >
+                {option}
+              </Text>
             </Pressable>
           )
         })}
       </View>
       <Pressable
-        style={[styles.primary, selected == null && styles.primaryDisabled]}
-        disabled={selected == null}
+        style={[styles.primary, { backgroundColor: colors.textH }]}
         onPress={() => {
           if (isLast) finishQuiz()
           else setCurrent((c) => c + 1)
         }}
       >
-        <Text style={styles.primaryText}>{isLast ? 'Submit quiz' : 'Next question'}</Text>
+        <Text style={[styles.primaryText, { color: colors.bg }]}>
+          {isLast ? 'Submit quiz' : selected == null ? 'Skip' : 'Next question'}
+        </Text>
       </Pressable>
     </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.bg },
+  root: { flex: 1 },
   pad: { padding: spacing.lg, paddingBottom: 40, gap: spacing.md },
   center: {
     flex: 1,
-    backgroundColor: colors.bg,
     alignItems: 'center',
     justifyContent: 'center',
     padding: spacing.lg,
@@ -297,52 +480,38 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  meta: { fontSize: 13, fontWeight: '600', color: colors.textMuted },
-  timer: { fontSize: 16, fontWeight: '700', color: colors.textH, fontVariant: ['tabular-nums'] },
-  timerUrgent: { color: colors.error },
-  heading: { fontSize: 22, fontWeight: '700', color: colors.textH },
-  question: { fontSize: 18, fontWeight: '600', lineHeight: 26, color: colors.textH },
+  meta: { fontSize: 13, fontWeight: '600' },
+  timer: { fontSize: 16, fontWeight: '700', fontVariant: ['tabular-nums'] },
+  heading: { fontSize: 22, fontWeight: '700' },
+  question: { fontSize: 18, fontWeight: '600', lineHeight: 26 },
   options: { gap: 10 },
   option: {
     padding: spacing.md,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
   },
-  optionActive: {
-    borderColor: colors.textH,
-    backgroundColor: colors.bg,
-  },
-  optionText: { fontSize: 15, lineHeight: 22, color: colors.textH },
+  optionText: { fontSize: 15, lineHeight: 22 },
   optionTextActive: { fontWeight: '600' },
   primary: {
-    backgroundColor: colors.textH,
     borderRadius: 10,
     paddingVertical: 14,
     alignItems: 'center',
   },
   primaryDisabled: { opacity: 0.35 },
-  primaryText: { color: colors.bg, fontWeight: '600', fontSize: 15 },
+  primaryText: { fontWeight: '600', fontSize: 15 },
   secondary: {
     borderWidth: 1,
-    borderColor: colors.border,
     borderRadius: 10,
     paddingVertical: 14,
     alignItems: 'center',
-    backgroundColor: colors.surface,
   },
-  secondaryText: { color: colors.textH, fontWeight: '600', fontSize: 15 },
-  score: { fontSize: 32, fontWeight: '700', color: colors.textH },
-  pass: { fontSize: 15, fontWeight: '600', color: colors.success },
-  fail: { color: colors.textMuted },
-  error: { color: colors.textMuted, textAlign: 'center' },
+  secondaryText: { fontWeight: '600', fontSize: 15 },
+  score: { fontSize: 32, fontWeight: '700' },
+  error: { textAlign: 'center' },
   reviewCard: {
     padding: spacing.md,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
     gap: 8,
   },
   reviewHead: {
@@ -351,7 +520,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
   },
-  reviewMeta: { fontSize: 12, fontWeight: '600', color: colors.textMuted },
-  bookmark: { fontSize: 13, fontWeight: '600', color: colors.accent },
-  explanation: { fontSize: 14, lineHeight: 21, color: colors.text },
+  reviewMeta: { fontSize: 12, fontWeight: '600' },
+  bookmark: { fontSize: 13, fontWeight: '600' },
+  explanation: { fontSize: 14, lineHeight: 21 },
+  code: {
+    fontFamily: 'Courier',
+    fontSize: 12,
+    lineHeight: 18,
+    padding: 10,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
 })
