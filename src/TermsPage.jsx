@@ -5,14 +5,14 @@ export default function TermsPage() {
   return (
     <ContentPage
       title="Terms of Use"
-      description="Terms of Use for frontendprep.app — acceptable use, content disclaimer, and liability limits."
+      description="Terms of Use for frontendprep.site — acceptable use, content disclaimer, and liability limits."
       path="/terms"
       eyebrow="Legal"
       lead="Last updated: August 6, 2026"
     >
       <ContentSection title="Agreement">
         <p>
-          By accessing frontendprep.app you agree to these Terms of Use. If you do not agree, do not use
+          By accessing frontendprep.site you agree to these Terms of Use. If you do not agree, do not use
           the site. The service is provided by mint. for personal learning and exam practice.
         </p>
       </ContentSection>

@@ -1,10 +1,10 @@
-/** Logo variant follows `data-theme` in CSS so it never desyncs from the page colors. */
+/** Opaque logos per theme — black mark on white / white mark on black. */
 export default function BrandLogo({ className = '', alt = 'frontendprep' }) {
   return (
     <span className={`brand-logo ${className}`.trim()}>
       <img
         className="brand-logo__img brand-logo__img--on-light"
-        src="/logo.png"
+        src="/logo-on-white.png"
         alt={alt}
         width={40}
         height={40}
@@ -12,7 +12,7 @@ export default function BrandLogo({ className = '', alt = 'frontendprep' }) {
       />
       <img
         className="brand-logo__img brand-logo__img--on-dark"
-        src="/logo-light.png"
+        src="/logo-on-black.png"
         alt=""
         width={40}
         height={40}

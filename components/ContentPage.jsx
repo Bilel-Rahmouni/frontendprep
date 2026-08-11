@@ -26,9 +26,9 @@ export default function ContentPage({
   )
 }
 
-export function ContentSection({ title, children }) {
+export function ContentSection({ title, children, id }) {
   return (
-    <section className="content-section">
+    <section className="content-section" id={id}>
       {title && <h2 className="content-section__title">{title}</h2>}
       {children}
     </section>

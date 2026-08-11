@@ -26,7 +26,7 @@ export default function QuizHub() {
   const isExam = quizIndexParam === 'exam'
   const quizIndex = isExam ? null : quizIndexParam != null ? Number(quizIndexParam) : null
   const bankKey = partId && levelId ? `${partId}/${levelId}` : null
-  const loading = Boolean(bankKey && bank.key !== bankKey && !bank.error)
+  const loading = Boolean(bankKey && bank.key !== bankKey)
 
   const allQuestions = useMemo(
     () => (bank.key === bankKey ? bank.data : []),
@@ -228,6 +228,24 @@ export default function QuizHub() {
         {meta}
         <div className="hub-page hub-page--loading">
         <p className="loading-text">Loading questions…</p>
+        </div>
+      </>
+    )
+  }
+
+  if (quiz && !loading && !loadError && quizQuestions.length === 0) {
+    return (
+      <>
+        {meta}
+        <div className="hub-page">
+          <p className="loading-text loading-text--error">No questions available for this quiz.</p>
+          <button
+            type="button"
+            className="btn btn--ghost"
+            onClick={() => navigate(`/quiz/${partId}/${levelId}`)}
+          >
+            Back to quizzes
+          </button>
         </div>
       </>
     )

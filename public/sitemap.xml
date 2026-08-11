@@ -1,206 +1,212 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://frontendprep.app/</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/quiz</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/quiz</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/prep</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/prep</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/guides</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/guides</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/faq</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/faq</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/about</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/about</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/privacy</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/privacy</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/delete-data</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/ad-privacy</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/terms</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/delete-data</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/guides/frontend-interview-prep</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/terms</loc>
+    <lastmod>2026-08-11</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://frontendprep.site/guides/frontend-interview-prep</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/guides/html-interview-guide</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/guides/html-interview-guide</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/guides/css-interview-guide</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/guides/css-interview-guide</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/guides/react-interview-guide</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/guides/react-interview-guide</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/guides/javascript-frontend-basics</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/guides/javascript-frontend-basics</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/guides/timed-mcq-strategy</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/guides/timed-mcq-strategy</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/guides/accessibility-frontend-exams</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/guides/accessibility-frontend-exams</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/guides/performance-basics-frontend</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/guides/performance-basics-frontend</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/guides/dom-events-interview</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/guides/dom-events-interview</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/quiz/html</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/quiz/html</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/quiz/html/beginner</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/quiz/html/beginner</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/quiz/html/intermediate</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/quiz/html/intermediate</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/quiz/html/advanced</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/quiz/html/advanced</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/quiz/css</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/quiz/css</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/quiz/css/beginner</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/quiz/css/beginner</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/quiz/css/intermediate</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/quiz/css/intermediate</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/quiz/css/advanced</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/quiz/css/advanced</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/quiz/react</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/quiz/react</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/quiz/react/beginner</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/quiz/react/beginner</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/quiz/react/intermediate</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/quiz/react/intermediate</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/quiz/react/advanced</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/quiz/react/advanced</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/quiz/frontend</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/quiz/frontend</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/quiz/frontend/beginner</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/quiz/frontend/beginner</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/quiz/frontend/intermediate</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/quiz/frontend/intermediate</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://frontendprep.app/quiz/frontend/advanced</loc>
-    <lastmod>2026-08-07</lastmod>
+    <loc>https://frontendprep.site/quiz/frontend/advanced</loc>
+    <lastmod>2026-08-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

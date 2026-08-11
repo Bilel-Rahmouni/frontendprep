@@ -15,6 +15,7 @@ const GuidePage = lazy(() => import('./GuidePage'))
 const FaqPage = lazy(() => import('./FaqPage'))
 const AboutPage = lazy(() => import('./AboutPage'))
 const PrivacyPage = lazy(() => import('./PrivacyPage'))
+const AdPrivacyPage = lazy(() => import('./AdPrivacyPage'))
 const DeleteDataPage = lazy(() => import('./DeleteDataPage'))
 const TermsPage = lazy(() => import('./TermsPage'))
 
@@ -47,6 +48,7 @@ function Layout() {
             <Route path="faq" element={<FaqPage />} />
             <Route path="about" element={<AboutPage />} />
             <Route path="privacy" element={<PrivacyPage />} />
+            <Route path="ad-privacy" element={<AdPrivacyPage />} />
             <Route path="delete-data" element={<DeleteDataPage />} />
             <Route path="terms" element={<TermsPage />} />
             <Route path="saved" element={<SavedQuestionsHub />} />

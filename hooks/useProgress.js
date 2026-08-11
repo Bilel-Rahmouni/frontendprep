@@ -10,15 +10,16 @@ import {
 let progressVersion = 0
 
 function subscribe(cb) {
-  const handler = () => {
+  // progress-changed already bumps version in bump(); storage (other tabs) needs its own bump.
+  const onStorage = () => {
     progressVersion += 1
     cb()
   }
-  window.addEventListener('storage', handler)
-  window.addEventListener('progress-changed', handler)
+  window.addEventListener('storage', onStorage)
+  window.addEventListener('progress-changed', cb)
   return () => {
-    window.removeEventListener('storage', handler)
-    window.removeEventListener('progress-changed', handler)
+    window.removeEventListener('storage', onStorage)
+    window.removeEventListener('progress-changed', cb)
   }
 }
 

@@ -20,7 +20,7 @@ export default function DeleteDataPage() {
         </p>
         <ul>
           <li>
-            <strong>Website:</strong> clear site data for frontendprep.app in your browser settings.
+            <strong>Website:</strong> clear site data for frontendprep.site in your browser settings.
           </li>
           <li>
             <strong>Android app:</strong> Settings → Apps → frontendprep → Storage → Clear data, or
@@ -31,12 +31,13 @@ export default function DeleteDataPage() {
 
       <ContentSection title="Advertising data">
         <p>
-          If you accepted ads, Google AdMob / AdSense may process device and ad identifiers. Manage or
-          reset them in{' '}
+          Google AdMob (app) and AdSense (website, after consent) may process device and ad
+          identifiers. Manage or reset them in{' '}
           <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">
             Google Ads Settings
           </a>
-          . See also our <Link to="/privacy">Privacy Policy</Link>.
+          . See <Link to="/ad-privacy">Advertising & privacy</Link> and the{' '}
+          <Link to="/privacy">Privacy Policy</Link>.
         </p>
       </ContentSection>
 

@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import AdSlot from '../components/AdSlot'
-import BrandLogo from '../components/BrandLogo'
 import HomeAppCta from '../components/HomeAppCta'
 import PageMeta from '../components/PageMeta'
 import { PARTS } from '../data/catalog'
@@ -18,11 +17,12 @@ export default function HomePage() {
 
       <section className="home-page">
         <div className="home-page__hero">
-          <BrandLogo className="home-page__logo" alt="" />
           <p className="eyebrow">Exam simulator</p>
-          <h1 className="display-title">frontendprep</h1>
+          <h1 className="display-title display-title--sm">
+            Timed practice for frontend exams
+          </h1>
           <p className="home-page__lead">
-            Timed HTML, CSS, React, and frontend practice — 1,200 questions, mock exams, and study guides.
+            1,200 HTML, CSS, React, and frontend questions — mock exams and study guides.
           </p>
           <div className="home-page__actions">
             <Link to="/quiz" className="btn btn--primary">

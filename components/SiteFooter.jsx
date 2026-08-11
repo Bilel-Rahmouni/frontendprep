@@ -10,6 +10,7 @@ export default function SiteFooter() {
         <Link to="/faq">FAQ</Link>
         <Link to="/guides">Guides</Link>
         <Link to="/privacy">Privacy</Link>
+        <Link to="/ad-privacy">Ad privacy</Link>
         <Link to="/terms">Terms</Link>
       </nav>
       <p className="app-bar__credit">

@@ -84,13 +84,24 @@ const browser = await puppeteer.launch({
 const page = await browser.newPage()
 await page.setViewport({ width: 1280, height: 900 })
 
+// Surface runtime crashes that otherwise look like a generic "not ready" timeout.
+page.on('pageerror', (err) => {
+  console.error(`Prerender pageerror: ${err?.message || err}`)
+})
+
 let done = 0
 
 for (const route of routes) {
   const url = `${baseUrl}${route}`
   process.stdout.write(`Prerender ${++done}/${routes.length} ${route}\n`)
 
+  // Avoid PWA SW caching interfering with chunk loads across routes.
   await page.goto(url, { waitUntil: 'networkidle0', timeout: 90000 })
+  await page.evaluate(async () => {
+    if (!('serviceWorker' in navigator)) return
+    const regs = await navigator.serviceWorker.getRegistrations()
+    await Promise.all(regs.map((r) => r.unregister()))
+  })
 
   try {
     await page.waitForFunction(
@@ -100,7 +111,15 @@ for (const route of routes) {
       { timeout: 45000 },
     )
   } catch {
-    throw new Error(`Prerender did not become ready for ${route}`)
+    const detail = await page.evaluate(() => ({
+      ready: window.__PRERENDER_READY__,
+      loading: Boolean(document.querySelector('.hub-page--loading')),
+      title: document.title,
+      body: (document.body?.innerText || '').slice(0, 240),
+    }))
+    throw new Error(
+      `Prerender did not become ready for ${route} (ready=${detail.ready}, loading=${detail.loading}, title=${detail.title})`,
+    )
   }
 
   const html = cleanPrerenderHtml(await page.content(), baseUrl)

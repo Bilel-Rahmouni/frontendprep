@@ -49,7 +49,7 @@ export default function ShareResultCard({ quiz, pct, score, total, passed }) {
 
     ctx.fillStyle = '#5e5968'
     ctx.font = '500 13px system-ui, sans-serif'
-    ctx.fillText('frontendprep.app', 32, 296)
+    ctx.fillText('frontendprep.site', 32, 296)
 
     return canvas
   }, [quiz.title, pct, score, total, passed])
@@ -64,8 +64,9 @@ export default function ShareResultCard({ quiz, pct, score, total, passed }) {
       try {
         await navigator.share({ title: 'frontendprep Result', text: shareText })
         return
-      } catch {
-        /* cancelled */
+      } catch (err) {
+        // User dismissed the share sheet — do not force a download
+        if (err?.name === 'AbortError' || err?.name === 'NotAllowedError') return
       }
     }
 

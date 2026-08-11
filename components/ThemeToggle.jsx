@@ -6,13 +6,23 @@ export default function ThemeToggle() {
   const isDark = theme === 'dark'
 
   return (
-    <button
-      type="button"
-      className="theme-toggle"
-      onClick={() => setTheme(isDark ? 'light' : 'dark')}
-      aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
-    >
-      <span className={`theme-toggle__icon ${isDark ? 'theme-toggle__icon--moon' : 'theme-toggle__icon--sun'}`} aria-hidden />
-    </button>
+    <div className="theme-switch" role="group" aria-label="Color theme">
+      <button
+        type="button"
+        className={`theme-switch__btn ${!isDark ? 'theme-switch__btn--active' : ''}`}
+        onClick={() => setTheme('light')}
+        aria-pressed={!isDark}
+      >
+        Light
+      </button>
+      <button
+        type="button"
+        className={`theme-switch__btn ${isDark ? 'theme-switch__btn--active' : ''}`}
+        onClick={() => setTheme('dark')}
+        aria-pressed={isDark}
+      >
+        Dark
+      </button>
+    </div>
   )
 }

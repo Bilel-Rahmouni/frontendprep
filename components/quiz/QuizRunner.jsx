@@ -63,6 +63,16 @@ export default function QuizRunner({ quiz, questions, examMode = false, onFinish
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [timeUp, question, selectedIndex, handleSelect, advance])
 
+  useEffect(() => {
+    if (!examMode || timeUp) return undefined
+    const onBeforeUnload = (e) => {
+      e.preventDefault()
+      e.returnValue = ''
+    }
+    window.addEventListener('beforeunload', onBeforeUnload)
+    return () => window.removeEventListener('beforeunload', onBeforeUnload)
+  }, [examMode, timeUp])
+
   if (!question) return null
 
   return (

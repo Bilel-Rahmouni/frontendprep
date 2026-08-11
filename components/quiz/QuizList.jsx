@@ -30,6 +30,12 @@ export default function QuizList({
   const level = getLevel(levelId)
   const trackOverview = getTrackOverview(partId)
   const levelOverview = getLevelOverview(levelId)
+  const examProg = getQuizProgress?.(`${partId}-${levelId}-exam`)
+  let examMeta = `Random ${QUESTIONS_PER_QUIZ} Q · ${getQuizTimeLabel()} · strict`
+  if (examProg?.bestPct != null) {
+    examMeta += ` · best ${examProg.bestPct}%`
+    if (examProg.passed) examMeta += ' · passed'
+  }
 
   return (
     <section className="hub-page">
@@ -71,7 +77,7 @@ export default function QuizList({
       >
         <span className="exam-row__body">
           <span className="exam-row__title">Mock exam</span>
-          <span className="exam-row__meta">Random {QUESTIONS_PER_QUIZ} Q · {getQuizTimeLabel()} · strict</span>
+          <span className="exam-row__meta">{examMeta}</span>
         </span>
         <span className="exam-row__go">Start</span>
       </button>

@@ -31,7 +31,7 @@ export default function PageMeta({
   useEffect(() => {
     if (!ready) {
       window.__PRERENDER_READY__ = false
-      return
+      return undefined
     }
 
     const fullTitle = title.includes(SITE_NAME) ? title : `${title} · ${SITE_NAME}`
@@ -52,6 +52,10 @@ export default function PageMeta({
 
     window.__PRERENDER_READY__ = true
     document.dispatchEvent(new Event('prerender-ready'))
+
+    return () => {
+      window.__PRERENDER_READY__ = false
+    }
   }, [title, description, path, ready, noindex])
 
   return null

@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import { LEVELS } from '../../data/catalog'
 import { getTrackOverview } from '../../data/trackOverviews'
 import HubOverview from './HubOverview'
@@ -26,12 +25,12 @@ export default function LevelSelector({ partLabel, partColor, partId, getLevelPr
           <h1 className="display-title display-title--sm">{partLabel} practice</h1>
           <p className="hub-page__lead hub-page__lead--inline">
             Choose a difficulty. Each level has five timed quizzes and a mock exam.
-            {guidePath && (
+            {guidePath ? (
               <>
                 {' '}
-                Read the <Link to={guidePath}>{partLabel} guide</Link> for topic context.
+                Read the <a href={guidePath}>{partLabel} guide</a> for topic context.
               </>
-            )}
+            ) : null}
           </p>
         </div>
       </div>
