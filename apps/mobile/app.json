@@ -2,7 +2,7 @@
   "expo": {
     "name": "frontendprep",
     "slug": "frontendprep",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "scheme": "frontendprep",
     "userInterfaceStyle": "automatic",
