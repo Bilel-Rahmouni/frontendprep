@@ -6,10 +6,7 @@ import { colors, spacing } from '../src/theme'
 
 export default function HomeScreen() {
   return (
-    <Screen
-      adSlot="home"
-      subtitle="Timed HTML, CSS, React, and frontend practice — same content as the web app."
-    >
+    <Screen subtitle="Timed HTML, CSS, React, and frontend practice — same content as the web app.">
       <View style={styles.metrics}>
         <Metric value="1,200" label="Questions" />
         <Metric value={String(PARTS.length)} label="Tracks" />

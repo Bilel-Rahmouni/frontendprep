@@ -1,9 +1,8 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import { colors, spacing } from '../theme'
-import AdBanner from './AdBanner'
 
 /** Content shell under the Stack header — no extra top safe-area (avoids huge gap). */
-export default function Screen({ title, subtitle, children, scroll = true, adSlot }) {
+export default function Screen({ title, subtitle, children, scroll = true }) {
   const body = (
     <View style={styles.inner}>
       {title ? <Text style={styles.title}>{title}</Text> : null}
@@ -12,24 +11,19 @@ export default function Screen({ title, subtitle, children, scroll = true, adSlo
     </View>
   )
 
-  const content = scroll ? (
-    <ScrollView
-      style={styles.flex}
-      contentContainerStyle={styles.scroll}
-      keyboardShouldPersistTaps="handled"
-    >
-      {body}
-    </ScrollView>
-  ) : (
-    <View style={styles.flex}>{body}</View>
-  )
+  if (scroll) {
+    return (
+      <ScrollView
+        style={styles.root}
+        contentContainerStyle={styles.scroll}
+        keyboardShouldPersistTaps="handled"
+      >
+        {body}
+      </ScrollView>
+    )
+  }
 
-  return (
-    <View style={styles.root}>
-      {content}
-      {adSlot ? <AdBanner slot={adSlot} /> : null}
-    </View>
-  )
+  return <View style={styles.root}>{body}</View>
 }
 
 const styles = StyleSheet.create({
@@ -37,11 +31,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.bg,
   },
-  flex: {
-    flex: 1,
-  },
   scroll: {
-    paddingBottom: spacing.xl + 16,
+    flexGrow: 1,
+    paddingBottom: spacing.lg,
   },
   inner: {
     paddingHorizontal: spacing.lg,
@@ -61,4 +53,3 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
   },
 })
-

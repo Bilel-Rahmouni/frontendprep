@@ -9,7 +9,7 @@ export default function PrepScreen() {
   const tips = useMemo(() => getTipsByCategory(category), [category])
 
   return (
-    <Screen adSlot="prep" title="Preparation" subtitle="Short tips between timed quizzes.">
+    <Screen title="Preparation" subtitle="Short tips between timed quizzes.">
       <View style={styles.chips}>
         {PREP_CATEGORIES.map((cat) => {
           const active = cat.id === category

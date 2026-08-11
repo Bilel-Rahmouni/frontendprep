@@ -13,11 +13,7 @@ export default function GuideDetailScreen() {
   }
 
   return (
-    <Screen
-      adSlot="guide"
-      title={guide.title}
-      subtitle={`${guide.category} · ${guide.readMinutes} min read`}
-    >
+    <Screen title={guide.title} subtitle={`${guide.category} · ${guide.readMinutes} min read`}>
       {guide.sections.map((section) => (
         <View key={section.heading} style={styles.section}>
           <Text style={styles.heading}>{section.heading}</Text>

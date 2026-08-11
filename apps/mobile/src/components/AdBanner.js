@@ -1,22 +1,29 @@
 import { useEffect, useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import useConsent from '../hooks/useConsent'
-import { getAdsModule, getBannerUnitId, initializeAds } from '../lib/ads'
-import { colors, spacing } from '../theme'
+import { StyleSheet, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import {
+  getAdsModule,
+  getBannerUnitId,
+  hasAdsNativeModule,
+  initializeAds,
+} from '../lib/ads'
+import { colors } from '../theme'
 
-/**
- * Anchored banner. Shown only after ads consent.
- * Quiz / exam screens should not mount this.
- */
+/** Anchored adaptive banners are 50–90dp (≤15% of screen height). */
+export const BANNER_MIN_HEIGHT = 50
+export const BANNER_MAX_HEIGHT = 90
+
+/** Anchored banner + bottom safe area. Quiz screens should not mount this. */
 export default function AdBanner({ slot = 'home' }) {
-  const { ready, adsAllowed } = useConsent()
+  const insets = useSafeAreaInsets()
   const [loaded, setLoaded] = useState(false)
   const [failed, setFailed] = useState(false)
-  const ads = getAdsModule()
-  const unitId = getBannerUnitId(slot)
+  const nativeReady = hasAdsNativeModule()
+  const ads = nativeReady ? getAdsModule() : null
+  const unitId = nativeReady ? getBannerUnitId(slot) : null
 
   useEffect(() => {
-    if (!ready || !adsAllowed || !ads || !unitId) return undefined
+    if (!ads || !unitId) return undefined
     let cancelled = false
     initializeAds().then((ok) => {
       if (!ok || cancelled) setFailed(true)
@@ -24,56 +31,44 @@ export default function AdBanner({ slot = 'home' }) {
     return () => {
       cancelled = true
     }
-  }, [ready, adsAllowed, ads, unitId])
+  }, [ads, unitId])
 
-  if (!ready || !adsAllowed) return null
-
-  if (!ads || !unitId) {
-    if (!__DEV__) return null
-    return (
-      <View style={styles.dev} accessibilityElementsHidden>
-        <Text style={styles.devText}>Ads support the free quizzes</Text>
-      </View>
-    )
-  }
-
-  if (failed) return null
+  if (!ads || !unitId || failed) return null
 
   const { BannerAd, BannerAdSize } = ads
+  const bottomPad = Math.max(insets.bottom, 0)
 
   return (
-    <View style={[styles.wrap, !loaded && styles.wrapPending]}>
-      <BannerAd
-        unitId={unitId}
-        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-        requestOptions={{ requestNonPersonalizedAdsOnly: true }}
-        onAdLoaded={() => setLoaded(true)}
-        onAdFailedToLoad={() => setFailed(true)}
-      />
+    <View style={[styles.shell, { paddingBottom: bottomPad }]}>
+      <View style={[styles.slot, !loaded && styles.slotPending]}>
+        <BannerAd
+          unitId={unitId}
+          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+          requestOptions={{ requestNonPersonalizedAdsOnly: true }}
+          onAdLoaded={() => setLoaded(true)}
+          onAdFailedToLoad={() => setFailed(true)}
+        />
+      </View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  wrap: {
+  shell: {
     width: '100%',
-    alignItems: 'center',
     backgroundColor: colors.bg,
     borderTopWidth: 1,
     borderTopColor: colors.border,
   },
-  wrapPending: {
-    minHeight: 50,
-  },
-  dev: {
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.md,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
+  slot: {
+    width: '100%',
+    maxHeight: BANNER_MAX_HEIGHT,
     alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    backgroundColor: colors.bg,
   },
-  devText: {
-    fontSize: 12,
-    color: colors.textMuted,
+  slotPending: {
+    minHeight: BANNER_MIN_HEIGHT,
   },
 })

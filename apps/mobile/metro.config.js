@@ -18,9 +18,12 @@ config.resolver.nodeModulesPaths = [
   path.resolve(workspaceRoot, 'node_modules'),
 ]
 config.resolver.disableHierarchicalLookup = true
-config.resolver.sourceExts = [...new Set([...config.resolver.sourceExts, 'mjs', 'js'])]
 config.resolver.extraNodeModules = {
   '@frontendprep/content': path.resolve(workspaceRoot, 'packages/content'),
 }
+
+// Treat .mjs banks as JS source (not assets)
+config.resolver.assetExts = config.resolver.assetExts.filter((ext) => ext !== 'mjs')
+config.resolver.sourceExts = [...new Set([...config.resolver.sourceExts, 'mjs', 'js'])]
 
 module.exports = config

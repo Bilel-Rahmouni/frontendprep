@@ -15,19 +15,16 @@ npx expo install react-native-google-mobile-ads
 
 ## Ads (AdMob banners)
 
-Banners show on Home, Guides, and Prep after the user Accepts the consent banner. Timed quizzes stay ad-free.
+One anchored banner is mounted in the root layout on all screens except timed quiz/exam runners.
 
-`app.json` currently uses **Google test AdMob app IDs**. Before release:
+**Android AdMob App ID** is set in `app.json`:
+`ca-app-pub-1493161259058671~2248223494`
 
-1. Create an AdMob app for `com.indigenoustech.frontendprep` (Android / iOS).
-2. Replace `androidAppId` / `iosAppId` (and the top-level `react-native-google-mobile-ads` keys) with your real App IDs.
-3. Create 3 banner units and set in `.env`:
+**Banner unit** (app-wide): `ca-app-pub-1493161259058671/2391693723`
 
-```
-EXPO_PUBLIC_ADMOB_BANNER_HOME=
-EXPO_PUBLIC_ADMOB_BANNER_GUIDE=
-EXPO_PUBLIC_ADMOB_BANNER_PREP=
-```
+iOS still uses Google’s test App ID until you create an iOS AdMob app. Dev builds use Google test banners; release builds use your real unit ID.
+
+After changing App IDs, rebuild native code (`npx expo prebuild` / EAS).
 
 AdMob needs a **custom native build** (not Expo Go):
 
